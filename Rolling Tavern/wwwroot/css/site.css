@@ -2,16 +2,17 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
+  color:white;
+  white-space: nowrap;
   text-align: center;
   word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
-  color: white;
-  font-family:'Bluu Next Cyrillic';
-
+    color: white;
+    font-size:20px;
+    font-family: 'Bluu Next Cyrillic';
 }
 
 .btn-primary {
@@ -21,7 +22,7 @@ a {
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
+  color: white;
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
@@ -62,7 +63,6 @@ html {
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
 }
 
 .footer {
@@ -77,6 +77,8 @@ header {
 }
 
 p{
+    margin-top:5px;
+    margin-bottom:5px;
     color:white;
     font-family:Mookmania;
 }
