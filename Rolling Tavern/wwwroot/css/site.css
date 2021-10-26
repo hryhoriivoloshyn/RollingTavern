@@ -9,7 +9,9 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: white;
+  font-family:'Bluu Next Cyrillic';
+
 }
 
 .btn-primary {
@@ -62,12 +64,19 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
+  background:black;
 }
-header{
-    margin-right:0px;
+header {
+    background: black;
+}
+
+p{
+    color:white;
+    font-family:Mookmania;
 }
