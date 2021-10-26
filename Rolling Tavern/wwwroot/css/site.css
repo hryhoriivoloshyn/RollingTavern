@@ -67,5 +67,7 @@ body {
   bottom: 0;
   width: 100%;
   white-space: nowrap;
- 
+}
+header{
+    margin-right:0px;
 }
