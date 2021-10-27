@@ -1,28 +1,26 @@
 ﻿<header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" href="/" style="">
-                <img src="~/images/LogoTavern.ico" width="130" height="70" i asp-append-version="true" />
-            </a>
+        <a class="navbar-brand" href="/" style="">
+            <img src="~/images/LogoTavern.ico" width="130" height="70" i asp-append-version="true" />
+        </a>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav">
-                    <partial name="_LoginPartial" />
-                </ul>
-                <ul class="navbar-nav flex-grow-1">
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <ul class="navbar-nav">
+                <partial name="_LoginPartial" />
+            </ul>
+            <ul class="navbar-nav flex-grow-1">
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Настільні ігри</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Зустрічі</a>
-                    </li>
-                    <li class="nav-item dropdown" style="background:#B82406;border-radius:5px;margin-left:20px;">
-                        <a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Створити зустріч</a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Настільні ігри</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Зустрічі</a>
+                </li>
+                <li class="nav-item dropdown" style="background:#B82406;border-radius:5px;margin-left:20px;">
+                    <a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Створити зустріч</a>
+                </li>
 
-                </ul>
-            </div>
+            </ul>
         </div>
     </nav>
 </header>
