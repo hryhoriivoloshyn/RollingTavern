@@ -8,14 +8,10 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body style="background: url(images/Bground.png); background-repeat: no-repeat; 
+<body style="background: url(images/Bground.png); background-repeat: no-repeat;
        background-position: center; background-size: cover; width: 100%; height: 100%; padding:0;margin:0">
     <partial name="_header" />
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    @RenderBody()
 
     <partial name="_footer" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
