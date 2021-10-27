@@ -10,19 +10,16 @@ using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
-    public class ResetAuthenticatorModel : PageModel
+    public class Disable2faModel : PageModel
     {
-        UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        ILogger<ResetAuthenticatorModel> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<Disable2faModel> _logger;
 
-        public ResetAuthenticatorModel(
+        public Disable2faModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<ResetAuthenticatorModel> logger)
+            ILogger<Disable2faModel> logger)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _logger = logger;
         }
 
@@ -37,6 +34,11 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            if (!await _userManager.GetTwoFactorEnabledAsync(user))
+            {
+                throw new InvalidOperationException($"Cannot disable 2FA for user with ID '{_userManager.GetUserId(User)}' as it's not currently enabled.");
+            }
+
             return Page();
         }
 
@@ -48,14 +50,15 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
-            
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";
+            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            if (!disable2faResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(User)}'.");
+            }
 
-            return RedirectToPage("./EnableAuthenticator");
+            _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
+            StatusMessage = "2fa has been disabled. You can reenable 2fa when you setup an authenticator app";
+            return RedirectToPage("./TwoFactorAuthentication");
         }
     }
 }

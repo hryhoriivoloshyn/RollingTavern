@@ -8,15 +8,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ConfirmEmailModel(UserManager<IdentityUser> userManager)
+        public ConfirmEmailModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -24,14 +25,14 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         [TempData]
         public string StatusMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string userId, string code)
+        public async Task<IActionResult> OnGetAsync(long userId, string code)
         {
-            if (userId == null || code == null)
+            if (userId == default(long) || code == null)
             {
                 return RedirectToPage("/Index");
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{userId}'.");
