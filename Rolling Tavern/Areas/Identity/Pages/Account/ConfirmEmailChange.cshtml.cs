@@ -27,14 +27,14 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         [TempData]
         public string StatusMessage { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string userId, string email, string code)
+        public async Task<IActionResult> OnGetAsync(long userId, string email, string code)
         {
-            if (userId == null || email == null || code == null)
+            if (userId == default(long) || email == null || code == null)
             {
                 return RedirectToPage("/Index");
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{userId}'.");

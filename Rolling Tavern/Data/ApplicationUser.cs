@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rolling_Tavern.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<long>
     {
         [PersonalData]
         public string FirstName { get; set; }
@@ -19,6 +19,9 @@ namespace Rolling_Tavern.Models
         
         [PersonalData]
         public string ProfilePicture { get; set; }
-        
+
+        [PersonalData]
+        public virtual ICollection<Request> Meetings { get; set; }
+
     }
 }
