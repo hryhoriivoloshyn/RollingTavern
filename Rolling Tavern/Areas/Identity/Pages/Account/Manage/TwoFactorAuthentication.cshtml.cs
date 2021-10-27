@@ -10,21 +10,32 @@ using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
-    public class ResetAuthenticatorModel : PageModel
+    public class TwoFactorAuthenticationModel : PageModel
     {
-        UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        ILogger<ResetAuthenticatorModel> _logger;
+        private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
 
-        public ResetAuthenticatorModel(
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<TwoFactorAuthenticationModel> _logger;
+
+        public TwoFactorAuthenticationModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<ResetAuthenticatorModel> logger)
+            ILogger<TwoFactorAuthenticationModel> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
         }
+
+        public bool HasAuthenticator { get; set; }
+
+        public int RecoveryCodesLeft { get; set; }
+
+        [BindProperty]
+        public bool Is2faEnabled { get; set; }
+
+        public bool IsMachineRemembered { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -37,10 +48,15 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null;
+            Is2faEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+            IsMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user);
+            RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user);
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPost()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -48,14 +64,9 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            _logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
-            
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";
-
-            return RedirectToPage("./EnableAuthenticator");
+            await _signInManager.ForgetTwoFactorClientAsync();
+            StatusMessage = "The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.";
+            return RedirectToPage();
         }
     }
 }
