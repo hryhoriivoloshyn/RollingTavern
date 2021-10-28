@@ -67,11 +67,11 @@ body {
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  background:black;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    background: black;
 }
 header {
     background: black;
