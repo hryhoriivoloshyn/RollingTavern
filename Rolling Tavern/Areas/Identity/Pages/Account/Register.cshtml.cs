@@ -59,11 +59,6 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             [Display(Name = "First name")]
             public string FirstName { get; set; }
 
-            [Required]
-            [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
-            [DataType(DataType.Text)]
-            [Display(Name = "First name")]
-            public string FirstName { get; set; }
 
             [Required]
             [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
