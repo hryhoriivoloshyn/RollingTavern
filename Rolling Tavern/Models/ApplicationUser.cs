@@ -20,6 +20,7 @@ namespace Rolling_Tavern.Models
         [PersonalData]
         public string ProfilePicture { get; set; }
 
+
         [PersonalData]
         public virtual ICollection<Request> Meetings { get; set; }
 
