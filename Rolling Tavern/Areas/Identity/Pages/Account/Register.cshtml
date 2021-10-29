@@ -4,6 +4,7 @@
     ViewData["Title"] = "Register";
 }
 
+
 <div style="margin-left: auto; margin-right: auto">
     <form class="main-form" asp-route-returnUrl="@Model.ReturnUrl" method="post">
         <hr />
@@ -44,8 +45,14 @@
         </div>
     </form>
 </div>
-
 <style>
+    label{
+        font-family:'Bluu Next Cyrillic';
+    }
+    h1{
+        font-family:'Bluu Next Cyrillic';
+        margin-top:10px
+    }
     body {
         background-color: #f6f0dc;
     }
@@ -60,11 +67,15 @@
         background-color: #ffffff;
         margin-left: 30%;
         margin-right: 30%;
+        margin-bottom: 10%;
         box-shadow: 0 0 10px #555555;
         border-radius: 10px;
     }
 
     .button {
+        font-family: 'Bluu Next Cyrillic';
+        position: relative;
+        top: 18px;
         padding-top: 2px;
         padding-bottom: 2px;
         padding-left: 20px;
