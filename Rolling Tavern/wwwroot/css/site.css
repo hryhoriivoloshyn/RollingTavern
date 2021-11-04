@@ -67,11 +67,11 @@ body {
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  background:black;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    background: black;
 }
 header {
     background: black;
@@ -82,4 +82,7 @@ p{
     margin-bottom:5px;
     color:white;
     font-family:Mookmania;
+}
+#index-body {
+    margin-bottom: 9%;
 }
