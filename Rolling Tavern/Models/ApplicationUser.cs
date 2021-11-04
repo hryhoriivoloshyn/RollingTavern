@@ -22,7 +22,11 @@ namespace Rolling_Tavern.Models
 
 
         [PersonalData]
-        public virtual ICollection<Request> Meetings { get; set; }
+        public virtual ICollection<Request> Requests { get; set; }
+
+        [PersonalData]
+        public virtual ICollection<Meeting> CreatedMeetings { get; set; }
+
 
     }
 }

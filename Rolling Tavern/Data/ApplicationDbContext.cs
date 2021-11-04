@@ -55,9 +55,14 @@ namespace Rolling_Tavern.Data
 
                 entity.Property(e => e.PhotoLink).HasMaxLength(50);
 
-                entity.Property(e => e.SponsorId)
+                entity.Property(e => e.CreatorId)
                     .IsRequired()
                     .HasMaxLength(450);
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.CreatedMeetings)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK_Meetings_Users");
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.Meetings)
