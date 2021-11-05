@@ -10,8 +10,8 @@ using Rolling_Tavern.Data;
 namespace Rolling_Tavern.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211104154143_AddDependencies")]
-    partial class AddDependencies
+    [Migration("20211104185414_SpecifyingConstraints")]
+    partial class SpecifyingConstraints
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -292,7 +292,8 @@ namespace Rolling_Tavern.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("CreatorId")
+                    b.Property<long?>("CreatorId")
+                        .IsRequired()
                         .HasMaxLength(450)
                         .HasColumnType("bigint");
 
@@ -325,31 +326,21 @@ namespace Rolling_Tavern.Migrations
 
             modelBuilder.Entity("Rolling_Tavern.Models.Request", b =>
                 {
-                    b.Property<int>("MeetingId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("ApplicationUserId")
+                    b.Property<long>("UserId")
+                        .HasMaxLength(450)
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("MeetingId1")
+                    b.Property<int>("MeetingId")
                         .HasColumnType("int");
 
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
-                    b.Property<long>("UserId")
-                        .HasMaxLength(450)
-                        .HasColumnType("bigint");
+                    b.HasKey("UserId", "MeetingId");
 
-                    b.HasKey("MeetingId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("MeetingId1");
+                    b.HasIndex("MeetingId");
 
                     b.HasIndex("StateId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Requests");
                 });
@@ -426,7 +417,7 @@ namespace Rolling_Tavern.Migrations
                         .WithMany("CreatedMeetings")
                         .HasForeignKey("CreatorId")
                         .HasConstraintName("FK_Meetings_Users")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Rolling_Tavern.Models.BoardGame", "Game")
@@ -441,30 +432,22 @@ namespace Rolling_Tavern.Migrations
 
             modelBuilder.Entity("Rolling_Tavern.Models.Request", b =>
                 {
-                    b.HasOne("Rolling_Tavern.Models.ApplicationUser", null)
-                        .WithMany("Requests")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Rolling_Tavern.Models.Meeting", "Meeting")
-                        .WithMany()
+                        .WithMany("Requests")
                         .HasForeignKey("MeetingId")
                         .HasConstraintName("FK_Requests_Meetings")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rolling_Tavern.Models.Meeting", null)
-                        .WithMany("Requests")
-                        .HasForeignKey("MeetingId1");
-
                     b.HasOne("Rolling_Tavern.Models.State", "State")
-                        .WithMany()
+                        .WithMany("Requests")
                         .HasForeignKey("StateId")
                         .HasConstraintName("FK_Requests_States")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Rolling_Tavern.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Requests")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Requests_Users")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -490,6 +473,11 @@ namespace Rolling_Tavern.Migrations
                 });
 
             modelBuilder.Entity("Rolling_Tavern.Models.Meeting", b =>
+                {
+                    b.Navigation("Requests");
+                });
+
+            modelBuilder.Entity("Rolling_Tavern.Models.State", b =>
                 {
                     b.Navigation("Requests");
                 });

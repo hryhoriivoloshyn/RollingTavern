@@ -15,11 +15,12 @@ namespace Rolling_Tavern.Models
         public string Description { get; set; }
         public string AdditionalRequirements { get; set; }
         public string PhotoLink { get; set; }
-        public long CreatorId { get; set; }
+        public long? CreatorId { get; set; }
         public int? GameId { get; set; }
 
         public virtual BoardGame Game { get; set; }
         public virtual ApplicationUser Creator { get; set; }
+
         public virtual ICollection<Request> Requests { get; set; }
         
     }

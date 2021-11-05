@@ -40,7 +40,7 @@ namespace Rolling_Tavern.Migrations
                 column: "CreatorId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Requests_Meetings_MeetingId1",
