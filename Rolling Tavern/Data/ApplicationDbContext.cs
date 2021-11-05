@@ -55,9 +55,15 @@ namespace Rolling_Tavern.Data
 
                 entity.Property(e => e.PhotoLink).HasMaxLength(50);
 
-                entity.Property(e => e.SponsorId)
+                entity.Property(e => e.CreatorId)
                     .IsRequired()
                     .HasMaxLength(450);
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.CreatedMeetings)
+                    .HasForeignKey(d => d.CreatorId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FK_Meetings_Users");
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.Meetings)
@@ -68,27 +74,26 @@ namespace Rolling_Tavern.Data
             builder.Entity<Request>(entity =>
             {
                 
-                entity.HasKey(e=>e.UserId);
-                entity.HasKey(e => e.MeetingId);
+                entity.HasKey(e=>new {e.UserId, e.MeetingId});
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
 
                 entity.HasOne(d => d.User)
-                    .WithMany()
+                    .WithMany(p=>p.Requests)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Requests_Users");
 
                 entity.HasOne(d => d.Meeting)
-                    .WithMany()
+                    .WithMany(p=>p.Requests)
                     .HasForeignKey(d => d.MeetingId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Requests_Meetings");
 
                 entity.HasOne(d => d.State)
-                    .WithMany()
+                    .WithMany(p=>p.Requests)
                     .HasForeignKey(d => d.StateId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Requests_States");

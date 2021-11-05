@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rolling_Tavern.Data;
 
 namespace Rolling_Tavern.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211104183946_CompositeKeyRequests")]
+    partial class CompositeKeyRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,12 +333,22 @@ namespace Rolling_Tavern.Migrations
                     b.Property<int>("MeetingId")
                         .HasColumnType("int");
 
+                    b.Property<long?>("ApplicationUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("MeetingId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("StateId")
                         .HasColumnType("int");
 
                     b.HasKey("UserId", "MeetingId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("MeetingId");
+
+                    b.HasIndex("MeetingId1");
 
                     b.HasIndex("StateId");
 
@@ -430,22 +442,30 @@ namespace Rolling_Tavern.Migrations
 
             modelBuilder.Entity("Rolling_Tavern.Models.Request", b =>
                 {
-                    b.HasOne("Rolling_Tavern.Models.Meeting", "Meeting")
+                    b.HasOne("Rolling_Tavern.Models.ApplicationUser", null)
                         .WithMany("Requests")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Rolling_Tavern.Models.Meeting", "Meeting")
+                        .WithMany()
                         .HasForeignKey("MeetingId")
                         .HasConstraintName("FK_Requests_Meetings")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rolling_Tavern.Models.State", "State")
+                    b.HasOne("Rolling_Tavern.Models.Meeting", null)
                         .WithMany("Requests")
+                        .HasForeignKey("MeetingId1");
+
+                    b.HasOne("Rolling_Tavern.Models.State", "State")
+                        .WithMany()
                         .HasForeignKey("StateId")
                         .HasConstraintName("FK_Requests_States")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Rolling_Tavern.Models.ApplicationUser", "User")
-                        .WithMany("Requests")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Requests_Users")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -471,11 +491,6 @@ namespace Rolling_Tavern.Migrations
                 });
 
             modelBuilder.Entity("Rolling_Tavern.Models.Meeting", b =>
-                {
-                    b.Navigation("Requests");
-                });
-
-            modelBuilder.Entity("Rolling_Tavern.Models.State", b =>
                 {
                     b.Navigation("Requests");
                 });
