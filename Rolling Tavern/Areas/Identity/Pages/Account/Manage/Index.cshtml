@@ -34,6 +34,45 @@
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
+    <div>
+        <table border="3px" align="center" cellpadding="5px">
+            <tr>
+                <th>
+
+                </th>
+                <th>
+                    Фото
+                </th>
+                <th>
+                    Назва
+                </th>
+                <th>
+                    Адреса
+                </th>
+                <th>
+                    Дата
+                </th>
+                <th>
+                    Учасники
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            @foreach (var item in Model.CreatedMeetings)
+            {
+                <tr>
+                    <td></td>
+                    <td>@item.PhotoLink</td>
+                    <td>@item.MeetingName</td>
+                    <td>@item.AddresOfMeeting</td>
+                    <td>@item.DateOfMeeting</td>
+                    <td></td>
+                    <td><button class="btn btn-primary">Детальніше</button></td>
+                </tr>
+            }
+        </table>
+    </div>
 </div>
 
 @section Scripts {
