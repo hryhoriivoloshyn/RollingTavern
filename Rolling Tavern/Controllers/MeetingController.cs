@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +17,48 @@ namespace Rolling_Tavern.Controllers
     public class MeetingController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private IWebHostEnvironment _appEnvironment;
 
-        public MeetingController(ApplicationDbContext context)
+        public MeetingController(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _userManager = userManager;
+            _appEnvironment = appEnvironment;
+        }
+
+        public string MeetingNameModel { get; set; }
+        public string PhotoLinkModel { get; set; }
+        public DateTime DateOfMeetingModel { get; set; }
+        public string AddresOfMeetingModel { get; set; }
+        public string DescriptionModel { get; set; }
+        public string AdditionalRequirementsModel { get; set; }
+        public int GameIdModel { get; set; }
+        public int CreatorIdModel { get; set; }
+
+        private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
+        {
+            const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
+            if (profilePicture == null)
+            {
+                return defaultPicturePath;
+            }
+            var user = await _userManager.GetUserAsync(User);
+            string userId = await _userManager.GetUserIdAsync(user);
+            string format = "Mddyyyyhhmmsstt";
+            string imagename = String.Format("{0}", DateTime.Now.ToString(format));
+            string pictureType = profilePicture.ContentType;
+            string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
+            string profilePicturePath = "/MeetingPictures/" + userId + meeting.MeetingName.Trim() + imagename + "." + pictureExtension;
+
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
+            {
+                await profilePicture.CopyToAsync(fileStream);
+            }
+
+            return profilePicturePath;
         }
 
         // GET: Meeting
@@ -49,7 +91,6 @@ namespace Rolling_Tavern.Controllers
         // GET: Meeting/Create
         public IActionResult Create()
         {
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName");
             return View();
         }
@@ -59,11 +100,25 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId")] Meeting meeting)
+        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId")] Meeting meeting, IFormFile meetingPicture)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(meeting);
+                var picturePath = await UploadPicture(meetingPicture, meeting);
+                var loginedUser = await _userManager.GetUserAsync(User);
+                long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(loginedUser));
+                Meeting createdMeeting = new Meeting
+                {
+                    MeetingName = meeting.MeetingName,
+                    DateOfMeeting = meeting.DateOfMeeting,
+                    AddresOfMeeting = meeting.AddresOfMeeting,
+                    Description = meeting.Description,
+                    AdditionalRequirements = meeting.AdditionalRequirements,
+                    PhotoLink = picturePath,
+                    CreatorId = userId,
+                    GameId = meeting.GameId
+                };
+                _context.Add(createdMeeting);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
