@@ -4,14 +4,18 @@
     ViewData["Title"] = "Зміна даних";
     ViewData["ActivePage"] = ManageNavPages.EditProfile;
 }
-<h4 style="font-family:'Bluu Next Cyrillic';margin-left:250px;">@ViewData["Title"]</h4>
+@*
+    
+*@
+
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row" style="font-family:'Bluu Next Cyrillic'">
-    <div class="col-md-6">
+    <section class="profileLeft" style="background-color:white">
+        <h4 style="font-family:'Bluu Next Cyrillic';text-align:center;margin-top:5px;">@ViewData["Title"]</h4>
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row profile-row">
-                <div class="col-md-8" style="position:center">
+                <div class="col-md-8">
                     <div class="form-group">
                         <label asp-for="UserInfo.LastName">Ім`я</label>
                         <input asp-for="UserInfo.FirstName" class="form-control" enabled />
@@ -27,30 +31,48 @@
                     <div class="form-group">
                         <span asp-validation-for="UserInfo.ProfilePicture" class="text-danger"></span>
                         <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg" onchange="readURL(this);" />
-                        <img id="blah" src="#" alt="Оберіть фото" style="margin-top:5px"/>
+                        <img id="blah" src="#" alt="Оберіть фото" style="margin-top:20px;margin-bottom:5px" />
                     </div>
                 </div>
             </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary align-middle" style="margin: 10px 300px; font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;">Зберегти</button>
+            <button id="update-profile-button" type="submit" class="btn btn-primary align-middle" style="margin:auto;margin-bottom:10px;display:flex; font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;">Зберегти</button>
         </form>
-    </div>
+    </section>
+
     <script>
         function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            var h = $('#blah').height();
-            var w = $('#blah').width();
-            reader.onload = function (e) {
-                $('#blah')
-                    .attr('src', e.target.result)
-                    .width(w*4)
-                    .height(h*6);
-            };
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var h = $('#blah').height();
+                var w = $('#blah').width();
+                reader.onload = function (e) {
+                    $('#blah')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+                };
 
-            reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-    }
     </script>
+    <style>
+        .form-group {
+           
+            margin-left:50px;
+            margin-top:5px;
+        }
+        .editbody {
+        }
+
+        section.profileLeft {
+            color: black;
+            border: 1px solid black;
+            height: 100%;
+            width: 90%;
+            border-radius: 10px;
+        }
+    </style>
 </div>
 
 @section Scripts {

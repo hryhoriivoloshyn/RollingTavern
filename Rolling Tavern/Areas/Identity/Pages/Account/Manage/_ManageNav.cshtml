@@ -22,8 +22,9 @@
 </style>
 <section class="profile" style="background-color:white">
 
-    <p><center> <img src="~/images/settings_icon.png" alt="" class="round" style="height: 100px; width: 100px"></center>
-       </p>
+    <p>
+        <center> <img src="~/images/settings_icon.png" alt="" class="round" style="height: 100px; width: 100px"></center>
+    </p>
     <p><center> Name<br />Phone</center></p>
     <hr />
 
@@ -31,15 +32,19 @@
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
             <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
-            <a style="margin-left: 5%; color: black" id="profile" asp-page="./Email">Редагувати профіль</a>
+            <a style="margin-left: 5%; color: black" id="profile" asp-page="./EditProfile">Редагувати профіль</a>
             <hr />
             <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
-            <a style="margin-left: 5%; color: black" id="email" asp-page="./Email">Вихід</a>
+            <a style="margin-left: 5%; color: black" id="email" asp-page="./Logout">Вихід</a>
             <hr />
         </li>
 
     </ul>
-
+    <script>
+        function goToProfile(input) {
+            window.location.replace(input);
+        };
+    </script>
     @*
         <ul class="nav nav-pills flex-column">
             <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
