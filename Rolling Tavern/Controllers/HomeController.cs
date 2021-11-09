@@ -22,15 +22,7 @@ namespace Rolling_Tavern.Controllers
         {
             return View();
         }
-        public IActionResult Profile()
-        {
-            return View();
-        }
-        public IActionResult Profile2()
-        {
-            return View();
-        }
-
+     
         public IActionResult Privacy()
         {
             return View();
