@@ -11,13 +11,7 @@
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row profile-row">
-                <div class="col-md-4 relative">
-                    <div class="avatar">
-                        <div class="avatar-bg center">Фотографія</div>
-                    </div>
-                    <input type="file" class="form-control" name="avatar-file" />
-                </div>
-                <div class="col-md-8">
+                <div class="col-md-8" style="position:center">
                     <div class="form-group">
                         <label asp-for="UserInfo.LastName">Ім`я</label>
                         <input asp-for="UserInfo.FirstName" class="form-control" enabled />
@@ -30,12 +24,33 @@
                         <label asp-for="UserInfo.PhoneNumber">Номер телефону</label>
                         <input asp-for="UserInfo.PhoneNumber" class="form-control" enabled />
                     </div>
+                    <div class="form-group">
+                        <span asp-validation-for="UserInfo.ProfilePicture" class="text-danger"></span>
+                        <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg" onchange="readURL(this);" />
+                        <img id="blah" src="#" alt="Оберіть фото" style="margin-top:5px"/>
+                    </div>
                 </div>
             </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary align-middle" style="margin: 10px 300px; font-family: 'Bluu Next Cyrillic'; background: #B82406;">Зберегти</button>
-            <div class="row" style="height:100px"></div>
+            <button id="update-profile-button" type="submit" class="btn btn-primary align-middle" style="margin: 10px 300px; font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;">Зберегти</button>
         </form>
     </div>
+    <script>
+        function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var h = $('#blah').height();
+            var w = $('#blah').width();
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(w*4)
+                    .height(h*6);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
 </div>
 
 @section Scripts {
