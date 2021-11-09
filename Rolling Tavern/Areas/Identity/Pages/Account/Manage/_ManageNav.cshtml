@@ -20,9 +20,25 @@
     }
 
 </style>
-<section class="profile">
+<section class="profile" style="background-color:white">
 
-    <p><center> <img src="~/images/settings_icon.png" alt="" class="round"> </center></p>
+    <p><center> <img src="~/images/settings_icon.png" alt="" class="round" style="height: 100px; width: 100px"></center>
+       </p>
+    <p><center> Name<br />Phone</center></p>
+    <hr />
+
+
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+            <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
+            <a style="margin-left: 5%; color: black" id="profile" asp-page="./Email">Редагувати профіль</a>
+            <hr />
+            <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
+            <a style="margin-left: 5%; color: black" id="email" asp-page="./Email">Вихід</a>
+            <hr />
+        </li>
+
+    </ul>
 
     @*
         <ul class="nav nav-pills flex-column">
