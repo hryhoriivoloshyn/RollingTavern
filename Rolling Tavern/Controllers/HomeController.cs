@@ -22,7 +22,7 @@ namespace Rolling_Tavern.Controllers
         {
             return View();
         }
-
+     
         public IActionResult Privacy()
         {
             return View();
