@@ -26,7 +26,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly IWebHostEnvironment _appEnvironment;
+        private IWebHostEnvironment _appEnvironment;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;

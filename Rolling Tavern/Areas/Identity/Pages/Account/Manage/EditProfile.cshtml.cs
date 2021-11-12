@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,7 +13,6 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
     public partial class EditProfileModel : PageModel
     {
-        private readonly IWebHostEnvironment _appEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private Data.ApplicationDbContext db;
@@ -24,17 +20,18 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         public EditProfileModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            Data.ApplicationDbContext dbContext,
-            IWebHostEnvironment appEnvironment)
+            Data.ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             db = dbContext;
-            _appEnvironment = appEnvironment;
         }
 
         public ApplicationUser UserInfo { get; set; }
 
+        public IEnumerable<Meeting> CreatedMeetings { get; set; }
+
+        public IEnumerable<Meeting> AppliedMeetings { get; set; }
 
         public string Username { get; set; }
 
@@ -46,26 +43,74 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
-            [DataType(DataType.Text)]
-            [Display(Name = "Ім'я*")]
-            public string FirstName { get; set; }
-
-            [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
-            [DataType(DataType.Text)]
-            [Display(Name = "Призвище*")]
-            public string LastName { get; set; }
-
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-
-            [DataType(DataType.Upload)]
-            [Display(Name = "Завантажте фото профілю")]
-            public string ProfilePicture { get; set; }
         }
 
-   
+        private async Task<List<Meeting>> GetMeetingCreatorAsync(ApplicationUser user)
+        {
+            long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
+            List<Meeting> data = new List<Meeting>();
+            List<Meeting> tempData = await db.Meetings.Where(m => m.CreatorId == userId).ToListAsync();
+            if (tempData?.Any() == true)
+            {
+                foreach (var item in tempData)
+                {
+                    BoardGame game = db.BoardGames.Where(m => m.GameId == item.GameId).First();
+                    List<Request> requests = await db.Requests.Where(r => r.MeetingId == item.MeetingId).ToListAsync();
+                    data.Add(new Meeting()
+                    {
+                        MeetingId = item.MeetingId,
+                        MeetingName = item.MeetingName,
+                        DateOfMeeting = item.DateOfMeeting,
+                        AddresOfMeeting = item.AddresOfMeeting,
+                        Description = item.Description,
+                        AdditionalRequirements = item.AdditionalRequirements,
+                        PhotoLink = item.PhotoLink,
+                        Creator = user,
+                        CreatorId = userId,
+                        Game = game,
+                        GameId = item.GameId,
+                        Requests = requests
+                    });
+                }
+            }
+            return data;
+        }
+
+        private async Task<List<Meeting>> GetMeetingsAsync(ApplicationUser user)
+        {
+            long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
+            List<Request> meetingsId = await db.Requests.Where(r => r.UserId == userId && r.StateId == 3).ToListAsync();
+            List<Meeting> data = new List<Meeting>();
+            if (meetingsId?.Any() == true)
+            {
+                foreach (var i in meetingsId)
+                {
+                    Meeting meeting = db.Meetings.Where(m => m.MeetingId == i.MeetingId).First();
+                    BoardGame game = db.BoardGames.Where(m => m.GameId == meeting.GameId).First();
+                    List<Request> requests = await db.Requests.Where(r => r.MeetingId == meeting.GameId).ToListAsync();
+                    data.Add(new Meeting()
+                    {
+                        MeetingId = meeting.MeetingId,
+                        MeetingName = meeting.MeetingName,
+                        DateOfMeeting = meeting.DateOfMeeting,
+                        AddresOfMeeting = meeting.AddresOfMeeting,
+                        Description = meeting.Description,
+                        AdditionalRequirements = meeting.AdditionalRequirements,
+                        PhotoLink = meeting.PhotoLink,
+                        Creator = user,
+                        CreatorId = userId,
+                        Game = game,
+                        GameId = meeting.GameId,
+                        Requests = requests
+                    });
+                }
+            }
+            return data;
+        }
+
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
@@ -74,13 +119,12 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             Username = userName;
 
             UserInfo = user;
-
+            CreatedMeetings = await GetMeetingCreatorAsync(user);
+            AppliedMeetings = await GetMeetingsAsync(user);
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
-                FirstName  = user.FirstName,
-                LastName = user.LastName
+                PhoneNumber = phoneNumber
             };
         }
 
@@ -96,30 +140,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        private async Task UploadPicture(IFormFile profilePicture, ApplicationUser user)
-        {
-            if (profilePicture != null)
-            {
-                string pictureType = profilePicture.ContentType;
-                string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
-                var email = await _userManager.GetEmailAsync(user);
-                string profilePicturePath = "/ProfilePictures/" + email + "." + pictureExtension;
-
-                using (var fileStream =
-                    new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
-                {
-                    //Сделать условие 
-                    FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath+user.ProfilePicture);
-                    oldPicture.Delete();
-                    await profilePicture.CopyToAsync(fileStream);
-                }
-
-                user.ProfilePicture = profilePicturePath;
-            }
-        }
-
-
-        public async Task<IActionResult> OnPostAsync(IFormFile profilePicture)
+        public async Task<IActionResult> OnPostAsync()
             {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -133,28 +154,16 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            await UploadPicture(profilePicture, user);
-            user.FirstName = Input.FirstName;
-            user.LastName = Input.LastName;
-            user.PhoneNumber = Input.PhoneNumber;
-            db.Users.Update(user);
-            await db.SaveChangesAsync();
-            return RedirectToPage();
-            //По идее так писать профессиональнее, но для кастомных полей сделать логику сложнее
-            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //if (Input.PhoneNumber != phoneNumber)
-            //{
-            //    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            //    if (!setPhoneResult.Succeeded)
-            //    {
-            //        StatusMessage = "Unexpected error when trying to set phone number.";
-            //        return RedirectToPage();
-            //    }
-            //}
-
-
-
-
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            if (Input.PhoneNumber != phoneNumber)
+            {
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                if (!setPhoneResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    return RedirectToPage();
+                }
+            }
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
