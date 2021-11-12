@@ -61,11 +61,42 @@ namespace Rolling_Tavern.Controllers
             return profilePicturePath;
         }
 
-        // GET: Meeting
-        public async Task<IActionResult> Index()
+        private async Task<List<Meeting>> GetMeetings()
         {
-            var applicationDbContext = _context.Meetings.Include(m => m.Creator).Include(m => m.Game);
-            return View(await applicationDbContext.ToListAsync());
+            List<Meeting> Meetings = new List<Meeting>();
+            var allMeetings = await _context.Meetings.Where(d => d.DateOfMeeting>DateTime.Now).ToListAsync();
+            if(allMeetings?.Any()==true)
+            {
+                foreach(var item in allMeetings)
+                {
+                    List<Request> requests = await _context.Requests.Where(i => i.MeetingId == item.MeetingId).ToListAsync();
+                    ApplicationUser creator = await _userManager.GetUserAsync(User);
+                    BoardGame game = await _context.BoardGames.Where(g => g.GameId == item.GameId).FirstOrDefaultAsync();
+                    Meetings.Add(new Meeting
+                    {
+                        MeetingId = item.MeetingId,
+                        MeetingName = item.MeetingName,
+                        DateOfMeeting = item.DateOfMeeting,
+                        AddresOfMeeting = item.AddresOfMeeting,
+                        Description = item.Description,
+                        AdditionalRequirements = item.AdditionalRequirements,
+                        PhotoLink = item.PhotoLink,
+                        CreatorId = item.CreatorId,
+                        GameId = item.GameId,
+                        Game = game,
+                        Creator = creator,
+                        Requests = requests
+                    });
+                }    
+            }
+            return Meetings;
+        }
+
+        // GET: Meeting
+        public async Task<ViewResult> Index()
+        {
+            var data = await GetMeetings();
+            return View(data);
         }
 
         // GET: Meeting/Details/5
