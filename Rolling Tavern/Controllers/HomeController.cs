@@ -22,7 +22,11 @@ namespace Rolling_Tavern.Controllers
         {
             return View();
         }
-     
+        public IActionResult CreateMeetingPage()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
