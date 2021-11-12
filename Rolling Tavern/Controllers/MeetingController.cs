@@ -51,7 +51,7 @@ namespace Rolling_Tavern.Controllers
             string imagename = String.Format("{0}", DateTime.Now.ToString(format));
             string pictureType = profilePicture.ContentType;
             string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
-            string profilePicturePath = "/MeetingPictures/" + userId + meeting.MeetingName.Trim() + imagename + "." + pictureExtension;
+            string profilePicturePath = "/MeetingPictures/" + userId + meeting.MeetingName[0] + imagename + "." + pictureExtension;
 
             using (var fileStream = new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
             {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Rolling_Tavern.Controllers;
 using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
@@ -30,8 +31,6 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         public ApplicationUser UserInfo { get; set; }
 
         public IEnumerable<Meeting> CreatedMeetings { get; set; }
-
-        public IEnumerable<Meeting> AppliedMeetings { get; set; }
 
         public string Username { get; set; }
 
@@ -119,8 +118,18 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             Username = userName;
 
             UserInfo = user;
-            CreatedMeetings = await GetMeetingCreatorAsync(user);
-            AppliedMeetings = await GetMeetingsAsync(user);
+            var createdMeetings = await GetMeetingCreatorAsync(user);
+            var appliedMeetings = await GetMeetingsAsync(user);
+            List<Meeting> data = new List<Meeting>();
+            foreach(var item in createdMeetings)
+            {
+                data.Add(item);
+            }
+            foreach(var item in appliedMeetings)
+            {
+                data.Add(item);
+            }
+            CreatedMeetings = data.OrderByDescending(d => d.DateOfMeeting);
 
             Input = new InputModel
             {
