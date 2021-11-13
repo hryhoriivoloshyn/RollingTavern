@@ -1,5 +1,4 @@
 ﻿@using Rolling_Tavern.Models
-@*@model _ManageNavModel*@
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
