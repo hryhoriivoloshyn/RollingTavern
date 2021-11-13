@@ -8,7 +8,14 @@
             {
         <a href="/Meeting/Details/@meeting.MeetingId">
             <div class="card">
-                <img class="card-img-top" src="@meeting.PhotoLink" style="height: 160px; width: 275px">
+                @if (meeting.PhotoLink != null)
+                {
+                    <img class="card-img-top" src="@meeting.PhotoLink" style="height: 160px; width: 275px">
+                }
+                else
+                {
+                    <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="height: 160px; width: 275px">
+                }
                 <div class="card-body" style="text-align:center">
                     <h5 class="card-title">@meeting.MeetingName</h5>
                     <h6 class="card-text">@meeting.Creator.FirstName<img src="~/images/crown.png" style="height: 30px; margin-bottom: 1%; display: inline-block; width: 30px" /></h6>
