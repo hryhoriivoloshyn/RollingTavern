@@ -17,6 +17,7 @@ namespace Rolling_Tavern.Models
         public string PhotoLink { get; set; }
         public long? CreatorId { get; set; }
         public int? GameId { get; set; }
+        public int? MinimalAge { get; set; }
 
         public virtual BoardGame Game { get; set; }
         public virtual ApplicationUser Creator { get; set; }
