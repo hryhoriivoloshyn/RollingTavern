@@ -108,12 +108,13 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 using (var fileStream =
                     new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
                 {
-                    //Сделать условие 
-                    FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath+user.ProfilePicture);
-                    oldPicture.Delete();
+                    if(user.ProfilePicture!=null)
+                    {
+                        FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
+                        oldPicture.Delete();
+                    }
                     await profilePicture.CopyToAsync(fileStream);
                 }
-
                 user.ProfilePicture = profilePicturePath;
             }
         }

@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<Rolling_Tavern.Models.Meeting>
-<title>Meetings</title>
+@{ 
+    ViewData["Title"] = "Meeting";
+}
 <div class="container">
     <div class="card-deck">
         @if (Model?.Any() == true)
