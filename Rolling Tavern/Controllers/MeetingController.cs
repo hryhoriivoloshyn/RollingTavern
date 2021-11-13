@@ -29,14 +29,7 @@ namespace Rolling_Tavern.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        public string MeetingNameModel { get; set; }
-        public string PhotoLinkModel { get; set; }
-        public DateTime DateOfMeetingModel { get; set; }
-        public string AddresOfMeetingModel { get; set; }
-        public string DescriptionModel { get; set; }
-        public string AdditionalRequirementsModel { get; set; }
-        public int GameIdModel { get; set; }
-        public int CreatorIdModel { get; set; }
+      
 
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
@@ -120,6 +113,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: Meeting/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName");
