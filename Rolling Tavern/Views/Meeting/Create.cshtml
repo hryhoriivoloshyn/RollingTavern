@@ -8,65 +8,63 @@
 <div>
     <h2><center>Створення зустрічі</center></h2>
     <hr />
-    <div class="row justify-content-around">
-        <div class="col-4" style="margin-left:250px">
-            <div class="form-row profile-row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label>Назва зустрічі: </label>
-                        <input class="form-control" enabled />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="PhotoLink"></label>
-                        <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg" />
-                        <span asp-validation-for="PhotoLink" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label>Дата проведення зустрічі: </label>
-                        <input class="form-control" enabled />
-                    </div>
-                    <div class="form-group">
-                        <label>Адреса зустрічі: </label>
-                        <input class="form-control" enabled />
-                    </div>
-                    <div class="form-group">
-                        <label>Час проведення зустрічі: </label>
-                        <input class="form-control" enabled />
-                    </div>
-                    <div class="form-group">
-                        <label>Опис зустрічі: </label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-4" style="right:100px">
-            <div class="form-row profile-row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label asp-for="PhotoLink"></label>
-                        <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg" />
-                        <span asp-validation-for="PhotoLink" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label>Назва гри: </label>
-                        <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Вікові обмеження: </label>
-                        <input class="form-control" enabled />
-                    </div>
-                    <div class="form-group">
-                        <label>Опис зустрічі: </label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    <form asp-action="Create">
+        <div class="row justify-content-around">
+            <div class="col-4" style="margin-left:250px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label asp-for="MeetingName">Назва зустрічі: </label>
+                            <input asp-for="MeetingName" class="form-control" enabled />
+                            <span asp-validation-for="MeetingName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PhotoLink">Фото зустрічі</label>
+                            <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg" />
+                            <span asp-validation-for="PhotoLink" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateOfMeeting">Дата та час проведення зустрічі: </label>
+                            <input asp-for="DateOfMeeting" type="datetime" class="form-control" enabled />
+                            <span asp-validation-for="DateOfMeeting" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AddresOfMeeting">Адреса зустрічі: </label>
+                            <input asp-for="AddresOfMeeting" class="form-control" enabled />
+                            <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description">Опис зустрічі: </label>
+                            <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-4" style="right:100px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Назва гри: </label>
+                            <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Вікові обмеження: </label>
+                            <input class="form-control" enabled />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AdditionalRequirements">Додатковы вимоги: </label>
+                            <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
         </div>
-
-    </div>
+    </form>
+   
     <center>
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-primary" />
@@ -75,10 +73,26 @@
             <a asp-action="Index">Back to List</a>
         </div>
     </center>
-   
+
 </div>
 
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var h = $('#blah').height();
+            var w = $('#blah').width();
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(150);
+            };
 
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
