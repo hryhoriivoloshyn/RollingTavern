@@ -29,15 +29,6 @@ namespace Rolling_Tavern.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        public string MeetingNameModel { get; set; }
-        public string PhotoLinkModel { get; set; }
-        public DateTime DateOfMeetingModel { get; set; }
-        public string AddresOfMeetingModel { get; set; }
-        public string DescriptionModel { get; set; }
-        public string AdditionalRequirementsModel { get; set; }
-        public int GameIdModel { get; set; }
-        public int CreatorIdModel { get; set; }
-
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
             const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
@@ -82,6 +73,7 @@ namespace Rolling_Tavern.Controllers
                         AdditionalRequirements = item.AdditionalRequirements,
                         PhotoLink = item.PhotoLink,
                         CreatorId = item.CreatorId,
+                        MinimalAge = item.MinimalAge,
                         GameId = item.GameId,
                         Game = game,
                         Creator = creator,
@@ -131,7 +123,7 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId")] Meeting meeting, IFormFile meetingPicture)
+        public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
         {
             if (ModelState.IsValid)
             {
@@ -147,7 +139,8 @@ namespace Rolling_Tavern.Controllers
                     AdditionalRequirements = meeting.AdditionalRequirements,
                     PhotoLink = picturePath,
                     CreatorId = userId,
-                    GameId = meeting.GameId
+                    GameId = meeting.GameId,
+                    MinimalAge = meeting.MinimalAge
                 };
                 _context.Add(createdMeeting);
                 await _context.SaveChangesAsync();
@@ -181,7 +174,7 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId")] Meeting meeting)
+        public async Task<IActionResult> Edit(int id, [Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting)
         {
             if (id != meeting.MeetingId)
             {

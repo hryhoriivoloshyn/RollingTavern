@@ -18,13 +18,20 @@
                 {
                     <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="height: 160px; width: 275px">
                 }
-                <div class="card-body" style="text-align:center">
-                    <h5 class="card-title">@meeting.MeetingName</h5>
-                    <h6 class="card-text">@meeting.Creator.FirstName<img src="~/images/crown.png" style="height: 30px; margin-bottom: 1%; display: inline-block; width: 30px" /></h6>
+            <div class="card-body" style="text-align:center">
+                <h5 class="card-title">@meeting.MeetingName</h5>
+                <h6 class="card-text">@meeting.Creator.FirstName<img src="~/images/crown.png" style="height: 30px; margin-bottom: 1%; display: inline-block; width: 30px" /></h6>
+                @if (meeting.MinimalAge != null)
+                {
+                    <h6 class="card-text"><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" /> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers  <img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" />+@meeting.MinimalAge.Value</h6>
+                }
+                else
+                {
                     <h6 class="card-text"><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" /> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers  <img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" />+@meeting.Game.MinAgeOfPlayers</h6>
-                    <h6 class="card-text">@meeting.AddresOfMeeting</h6>
-                    <h6 class="card-text">@meeting.DateOfMeeting</h6>
-                </div>
+                }
+                <h6 class="card-text">@meeting.AddresOfMeeting</h6>
+                <h6 class="card-text">@meeting.DateOfMeeting</h6>
+            </div>
             </div>
         </a>  
             }
