@@ -1,4 +1,5 @@
 ﻿@using Rolling_Tavern.Models
+@*@model _ManageNavModel*@
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
@@ -20,12 +21,13 @@
     }
 
 </style>
+
 <section class="profile" style="background-color:white">
 
     <p>
-        <center> <img src="~/images/settings_icon.png" alt="" class="round" style="height: 100px; width: 100px"></center>
+        <center> <img src="@Model.UserInfo.ProfilePicture" alt="" class="round" style="height: 100px; width: 100px"></center>
     </p>
-    <p><center> Name<br />Phone</center></p>
+    <p><center> @Model.UserInfo.FirstName<br />@Model.UserInfo.LastName</center></p>
     <hr />
 
 
