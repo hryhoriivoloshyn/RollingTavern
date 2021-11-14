@@ -23,5 +23,6 @@ namespace Rolling_Tavern.Models
         public int? MinAgeOfPlayers { get; set; }
 
         public virtual ICollection<Meeting> Meetings { get; set; }
+        public virtual ICollection<GameImage> Images { get; set; }
     }
 }
