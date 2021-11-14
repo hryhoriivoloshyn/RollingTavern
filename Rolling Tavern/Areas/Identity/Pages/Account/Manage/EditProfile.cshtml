@@ -5,33 +5,33 @@
     ViewData["ActivePage"] = ManageNavPages.EditProfile;
 }
 @*
-    
+
 *@
 
 <partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row" style="font-family:'Bluu Next Cyrillic'">
     <section class="profileLeft" style="background-color:white">
         <h4 style="font-family:'Bluu Next Cyrillic';text-align:center;margin-top:5px;">@ViewData["Title"]</h4>
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row profile-row">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label asp-for="UserInfo.LastName">Ім`я</label>
-                        <input asp-for="UserInfo.FirstName" class="form-control" enabled />
+                        <label asp-for="Input.LastName">Ім`я</label>
+                        <input asp-for="Input.FirstName" class="form-control" enabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="UserInfo.LastName">Прізвище</label>
-                        <input asp-for="UserInfo.LastName" class="form-control" enabled />
+                        <label asp-for="Input.LastName">Прізвище</label>
+                        <input asp-for="Input.LastName" class="form-control" enabled />
                     </div>
                     <div class="form-group">
-                        <label asp-for="UserInfo.PhoneNumber">Номер телефону</label>
-                        <input asp-for="UserInfo.PhoneNumber" class="form-control" enabled />
+                        <label asp-for="Input.PhoneNumber">Номер телефону</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" enabled />
                     </div>
                     <div class="form-group">
-                        <span asp-validation-for="UserInfo.ProfilePicture" class="text-danger"></span>
+                        <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
                         <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg" onchange="readURL(this);" />
-                        <img id="blah" src="#" alt="Оберіть фото" style="margin-top:20px;margin-bottom:5px" />
+                        <img id="blah" src="#" alt="Оберіть фото профілю" style="margin-top:20px;margin-bottom:5px" />
                     </div>
                 </div>
             </div>
@@ -58,10 +58,10 @@
     </script>
     <style>
         .form-group {
-           
-            margin-left:50px;
-            margin-top:5px;
+            margin-left: 50px;
+            margin-top: 5px;
         }
+
         .editbody {
         }
 
@@ -76,5 +76,5 @@
 </div>
 
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }

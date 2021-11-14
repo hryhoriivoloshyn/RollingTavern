@@ -21,6 +21,7 @@ namespace Rolling_Tavern.Data
         public virtual DbSet<Meeting> Meetings { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<State> States { get; set; }
+        public virtual DbSet<GameImage> GameImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,6 +40,24 @@ namespace Rolling_Tavern.Data
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Genre).HasMaxLength(50);
+            });
+
+
+            builder.Entity<GameImage>(entity =>
+            {
+                entity.HasKey(e => e.ImageId);
+
+                entity.Property(e => e.ImagePath)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.Images)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Games_Images");
+
+
             });
 
             builder.Entity<Meeting>(entity =>

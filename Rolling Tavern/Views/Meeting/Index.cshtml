@@ -1,77 +1,40 @@
 ﻿@model IEnumerable<Rolling_Tavern.Models.Meeting>
-
-@{
-    ViewData["Title"] = "Index";
+@{ 
+    ViewData["Title"] = "Meeting";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MeetingName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfMeeting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddresOfMeeting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdditionalRequirements)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhotoLink)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Game)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Creator)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeetingName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfMeeting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddresOfMeeting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdditionalRequirements)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhotoLink)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.GameName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Creator.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MeetingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MeetingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MeetingId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <div class="card-deck">
+        @if (Model?.Any() == true)
+        {
+            @foreach (var meeting in Model)
+            {
+        <a href="/Meeting/Details/@meeting.MeetingId">
+            <div class="card">
+                @if (meeting.PhotoLink != null)
+                {
+                    <img class="card-img-top" src="@meeting.PhotoLink" style="height: 160px; width: 275px">
+                }
+                else
+                {
+                    <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="height: 160px; width: 275px">
+                }
+            <div class="card-body" style="text-align:center">
+                <h5 class="card-title">@meeting.MeetingName</h5>
+                <h6 class="card-text">@meeting.Creator.FirstName<img src="~/images/crown.png" style="height: 30px; margin-bottom: 1%; display: inline-block; width: 30px" /></h6>
+                @if (meeting.MinimalAge != null)
+                {
+                    <h6 class="card-text"><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" /> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers  <img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" />+@meeting.MinimalAge.Value</h6>
+                }
+                else
+                {
+                    <h6 class="card-text"><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" /> @meeting.Requests.Count(i => i.StateId == 2)/@meeting.Game.MaxAmountOfPlayers  <img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px" />+@meeting.Game.MinAgeOfPlayers</h6>
+                }
+                <h6 class="card-text">@meeting.AddresOfMeeting</h6>
+                <h6 class="card-text">@meeting.DateOfMeeting</h6>
+            </div>
+            </div>
+        </a>  
+            }
+        }
+    </div>
+</div>
