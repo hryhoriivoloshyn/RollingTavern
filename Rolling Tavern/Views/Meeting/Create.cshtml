@@ -69,7 +69,7 @@
     }
 </script>
 <div>
-    <h2><center>Створення зустрічі</center></h2>
+    <h2 style="text-align:center">Створення зустрічі</h2>
     <hr style="width:60vw" />
     <form asp-action="Create" method="post" enctype="multipart/form-data">
 
@@ -100,7 +100,7 @@
                             <input asp-for="AddresOfMeeting" class="form-control" id="address" enabled />
                             <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
                         </div>
-                        <p><input type="button" value="Проверить" onclick="setAddress()"></p>
+                       
                         <div class="form-group">
                             <label asp-for="Description">Опис зустрічі: </label>
                             <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
@@ -125,21 +125,33 @@
                             <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
                         </div>
+                        <div>
+                            <input type="button" value="Перевірити адресу" style="border-radius:3px;font-family: 'Bluu Next Cyrillic' ;margin-top:8px;margin-bottom:8px; background: #B82406;font-size:16px;color:white;" onclick="setAddress()">
+                        </div>
                         <div id="map"></div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <center>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-            <div>
-                <a asp-action="Index">Back to List</a>
-            </div>
-        </center>
+        <div>
+            <center>
+                <div class="form-group">
+                    <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" value="Створити" class="btn btn-primary" />
+                </div>
+                <div>
+                    <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустріч</a>
+                </div>
+            </center>
+        </div>
     </form>
 </div>
+<style>
+    .form-group, h2{
+        font-family:'Bluu Next Cyrillic';
+        color:#333333;
+    }
+</style>
 
 <script>
     function readURL(input) {
