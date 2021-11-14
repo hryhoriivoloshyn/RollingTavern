@@ -8,14 +8,84 @@
 
 <h4>Meeting</h4>
 <hr />
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #map {
+        height:400px;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<div id="map"></div>
+<p><input type="button" value="Проверить" onclick="setAddress()"></p>
+<script src="~/js/map.js"></script>
+<script>
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHN1cmlrYXBwYSIsImEiOiJja3Z3anY2czcwZjU1Mm5vZWZjNDF3YXppIn0.15HnrAoUseWpJvYgD8a1eg';
+    const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    var address;
+    let form = document.querySelector("#address");
+    form.addEventListener("input", () => {
+        setAddress();
+    });
+    function setAddress() {
+        let form = document.querySelector("#address");
+        var input = form.value;
+        address = input;
+        mapboxClient.geocoding
+            .forwardGeocode({
+                query: address +', Харьков',
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then((response) => {
+                if (
+                    !response ||
+                    !response.body ||
+                    !response.body.features ||
+                    !response.body.features.length
+                ) {
+                    console.error('Invalid response:');
+                    console.error(response);
+                    return;
+                }
+                const feature = response.body.features[0];
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+
+                // Create a marker and add it to the map.
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            });
+    }
+</script>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="MeetingName" class="control-label"></label>
                 <input asp-for="MeetingName" class="form-control" />
                 <span asp-validation-for="MeetingName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
             </div>
             <div class="form-group">
                 <label asp-for="DateOfMeeting" class="control-label"></label>
@@ -24,7 +94,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AddresOfMeeting" class="control-label"></label>
-                <input asp-for="AddresOfMeeting" class="form-control" />
+                <input asp-for="AddresOfMeeting" class="form-control" id="address" />
                 <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -44,7 +114,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="GameId" class="control-label"></label>
-                <select asp-for="GameId" class ="form-control" asp-items="ViewBag.GameId"></select>
+                <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -52,7 +122,6 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
