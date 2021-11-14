@@ -4,11 +4,75 @@
     ViewData["Title"] = "Create";
 }
 
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
+    #map {
+        height: 71%;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script src="~/js/map.js"></script>
+<script>
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHN1cmlrYXBwYSIsImEiOiJja3Z3anY2czcwZjU1Mm5vZWZjNDF3YXppIn0.15HnrAoUseWpJvYgD8a1eg';
+    const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    var address;
+    let form = document.querySelector("#address");
+    form.addEventListener("input", () => {
+        setAddress();
+    });
+    function setAddress() {
+        let form = document.querySelector("#address");
+        var input = form.value;
+        address = input;
+        mapboxClient.geocoding
+            .forwardGeocode({
+                query: address + ', Харьков',
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then((response) => {
+                if (
+                    !response ||
+                    !response.body ||
+                    !response.body.features ||
+                    !response.body.features.length
+                ) {
+                    console.error('Invalid response:');
+                    console.error(response);
+                    return;
+                }
+                const feature = response.body.features[0];
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+
+                // Create a marker and add it to the map.
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            });
+    }
+</script>
 <div>
     <h2><center>Створення зустрічі</center></h2>
-    <hr />
-    <form asp-action="Create">
+    <hr style="width:60vw" />
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
         <div class="row justify-content-around">
             <div class="col-4" style="margin-left:250px">
                 <div class="form-row profile-row">
@@ -20,19 +84,23 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="PhotoLink">Фото зустрічі</label>
-                            <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg" />
+                            <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg" onchange="readURL(this)" />
                             <span asp-validation-for="PhotoLink" class="text-danger"></span>
+                            <div style="text-align:center">
+                                <img id="meet" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                            </div>
                         </div>
                         <div class="form-group">
                             <label asp-for="DateOfMeeting">Дата та час проведення зустрічі: </label>
-                            <input asp-for="DateOfMeeting" type="datetime" class="form-control" enabled />
+                            <input asp-for="DateOfMeeting" class="form-control" />
                             <span asp-validation-for="DateOfMeeting" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="AddresOfMeeting">Адреса зустрічі: </label>
-                            <input asp-for="AddresOfMeeting" class="form-control" enabled />
+                            <input asp-for="AddresOfMeeting" class="form-control" id="address" enabled />
                             <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
                         </div>
+                        <p><input type="button" value="Проверить" onclick="setAddress()"></p>
                         <div class="form-group">
                             <label asp-for="Description">Опис зустрічі: </label>
                             <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
@@ -53,37 +121,34 @@
                             <input class="form-control" enabled />
                         </div>
                         <div class="form-group">
-                            <label asp-for="AdditionalRequirements">Додатковы вимоги: </label>
+                            <label asp-for="AdditionalRequirements">Додаткові вимоги: </label>
                             <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
                         </div>
+                        <div id="map"></div>
                     </div>
                 </div>
-
             </div>
-
         </div>
+        <center>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </center>
     </form>
-   
-    <center>
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-        <div>
-            <a asp-action="Index">Back to List</a>
-        </div>
-    </center>
-
 </div>
 
 <script>
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            var h = $('#blah').height();
-            var w = $('#blah').width();
+            var h = $('#meet').height();
+            var w = $('#meet').width();
             reader.onload = function (e) {
-                $('#blah')
+                $('#meet')
                     .attr('src', e.target.result)
                     .width(150)
                     .height(150);
