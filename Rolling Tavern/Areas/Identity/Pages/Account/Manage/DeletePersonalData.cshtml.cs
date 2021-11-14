@@ -24,6 +24,8 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
             _logger = logger;
         }
+        public ApplicationUser UserInfo { get; set; }
+
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -46,6 +48,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
+            UserInfo = user;
             return Page();
         }
 
