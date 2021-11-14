@@ -9,9 +9,10 @@
     section.profileLeft {
         color: black;
         border: 1px solid black;
-        height: 100%;
+        height: fit-content;
         width: 90%;
         border-radius: 10px;
+        padding-bottom: 10px;
     }
 
     button {
@@ -58,7 +59,11 @@
                         <td><h5 style="display: inline-block; margin-left: 1%">@item.DateOfMeeting</h5></td>
                         <td><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"></td>
                         <td><h5 style="display: inline-block">@item.Requests.Count(i => i.StateId == 2) / @item.Game.MaxAmountOfPlayers</h5></td>
-                        <td><button style="margin-left: 1%; display: inline-block;">Details</button></td>
+                        <td>
+                            <a href="/Meeting/Details/@item.MeetingId" style="text-decoration-color:black">
+                                <button type="submit"  class="nav-link btn btn-link text-black" style="font-family: 'Bluu Next Cyrillic';border-radius:5px;border-color:black;color:black;border-width:2px">Details</button>
+                            </a>
+                        </td>
                     </tr>
                 }
             }

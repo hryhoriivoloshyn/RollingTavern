@@ -81,13 +81,25 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         private async Task<List<Meeting>> GetMeetingsAsync(ApplicationUser user)
         {
             long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
-            List<Request> meetingsId = await db.Requests.Where(r => r.UserId == userId && r.StateId == 3).ToListAsync();
+            List<Request> meetingsId = await db.Requests.Where(r => r.UserId == userId && r.StateId == 2).ToListAsync();
             List<Meeting> data = new List<Meeting>();
             if(meetingsId?.Any()==true)
             {
                 foreach (var i in meetingsId)
                 {
                     Meeting meeting = db.Meetings.Where(m => m.MeetingId == i.MeetingId).First();
+                    ApplicationUser Creator = new ApplicationUser();
+                    long? CreatorId = 0;
+                    if(meeting.CreatorId==null)
+                    {
+                        Creator = null;
+                        CreatorId = null;
+                    }
+                    else
+                    {
+                        CreatorId = meeting.CreatorId;
+                        Creator = await db.Users.Where(u => u.Id == CreatorId).FirstOrDefaultAsync();
+                    }
                     BoardGame game = db.BoardGames.Where(m => m.GameId == meeting.GameId).First();
                     List<Request> requests = await db.Requests.Where(r => r.MeetingId == meeting.GameId).ToListAsync();
                     data.Add(new Meeting()
@@ -99,8 +111,9 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                         Description = meeting.Description,
                         AdditionalRequirements = meeting.AdditionalRequirements,
                         PhotoLink = meeting.PhotoLink,
-                        Creator = user,
-                        CreatorId = userId,
+                        Creator = Creator,
+                        CreatorId = CreatorId,
+                        MinimalAge = meeting.MinimalAge,
                         Game = game,
                         GameId = meeting.GameId,
                         Requests = requests

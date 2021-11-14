@@ -55,7 +55,7 @@ namespace Rolling_Tavern.Controllers
         private async Task<List<Meeting>> GetMeetings()
         {
             List<Meeting> Meetings = new List<Meeting>();
-            var allMeetings = await _context.Meetings.Where(d => d.DateOfMeeting>DateTime.Now).ToListAsync();
+            var allMeetings = await _context.Meetings.Where(d => d.DateOfMeeting > DateTime.Now && d.Creator != null).ToListAsync();
             if(allMeetings?.Any()==true)
             {
                 foreach(var item in allMeetings)
