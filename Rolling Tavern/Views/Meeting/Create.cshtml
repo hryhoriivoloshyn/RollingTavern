@@ -69,10 +69,9 @@
     }
 </script>
 <div>
-    <h2><center>Створення зустрічі</center></h2>
-    <hr style="width:60vw" />
+    <h2 style="text-align:center;font-family:'Bluu Next Cyrillic'">Створення зустрічі</h2>
+    <hr style="width:775px;color:#333333;"/>
     <form asp-action="Create" method="post" enctype="multipart/form-data">
-
         <div class="row justify-content-around">
             <div class="col-4" style="margin-left:250px">
                 <div class="form-row profile-row">
@@ -129,18 +128,22 @@
                     </div>
                 </div>
             </div>
+      </div>
+    <center>
+        <div class="form-group">
+            <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" value="Створити" class="btn btn-primary" />
         </div>
-        <center>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-            <div>
-                <a asp-action="Index">Back to List</a>
-            </div>
-        </center>
-    </form>
+        <div>
+            <a asp-action="Index" style="text-align:right;color:#333333;">До списку зустріч</a>
+        </div>
+    </center>
 </div>
-
+<style>
+    .form-group {
+        font-family: 'Bluu Next Cyrillic';
+        color: #333333;
+    }
+</style>
 <script>
     function readURL(input) {
         if (input.files && input.files[0]) {
