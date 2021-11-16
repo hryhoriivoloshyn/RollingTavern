@@ -59,19 +59,27 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             [Display(Name = "Електронна пошта")]
             public string Email { get; set; }
 
-            
+            [Required]
+            [Display(Name="Нікнейм")]
+            public string UserName { get; set; }
+
+            [Phone]
+            [Display(Name="Номер телефону")]
+            [DataType(DataType.PhoneNumber)]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Введене значення не відповідає номеру телефона")]
+            public string Phone { get; set; }
 
             [Required]
-            [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
+            [StringLength(32, ErrorMessage = "{0} повинно бути не більше {1} літер")]
             [DataType(DataType.Text)]
             [Display(Name = "Ім'я*")]
             public string FirstName { get; set; }
 
 
             [Required]
-            [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
+            [StringLength(32, ErrorMessage = "{0} повинен бути не більше {1} літер")]
             [DataType(DataType.Text)]
-            [Display(Name = "Призвище*")]
+            [Display(Name = "Прізвище*")]
             public string LastName { get; set; }
 
             [Required]
@@ -80,19 +88,20 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             public DateTime DateOfBirth { get; set; }
 
             [Required]
-            [StringLength(24, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(24, ErrorMessage = "{0} повинен бути від {2} до {1} літер", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Пароль*")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
             [Display(Name = "Повторіть пароль*")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Паролі не співпадають.")]
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Upload)]
+            [AllowedExtensions(new string[]{".png",".jpg","jpeg"})]
             [Display(Name ="Завантажте фото профілю")]
-            public string ProfilePicture { get; set; }
+            public IFormFile  ProfilePicture { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -104,6 +113,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         private async Task<string> UploadPicture(IFormFile profilePicture)
         {
             const string defaultPicturePath = "/ProfilePictures/DefaultUser.png";
+            
             if (profilePicture == null)
             {
                 return defaultPicturePath;
@@ -132,8 +142,8 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
                 
 
                 var picturePath = await UploadPicture(profilePicture);
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
-
+                var user = new ApplicationUser { UserName = Input.Email, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 
                 if (result.Succeeded)

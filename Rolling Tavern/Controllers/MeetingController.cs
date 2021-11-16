@@ -61,7 +61,7 @@ namespace Rolling_Tavern.Controllers
                 foreach(var item in allMeetings)
                 {
                     List<Request> requests = await _context.Requests.Where(i => i.MeetingId == item.MeetingId).ToListAsync();
-                    ApplicationUser creator = await _userManager.GetUserAsync(User);
+                    ApplicationUser creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == item.CreatorId);
                     BoardGame game = await _context.BoardGames.Where(g => g.GameId == item.GameId).FirstOrDefaultAsync();
                     Meetings.Add(new Meeting
                     {
