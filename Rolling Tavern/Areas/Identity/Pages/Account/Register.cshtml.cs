@@ -31,7 +31,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -57,6 +57,10 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Електронна пошта")]
+            [RegularExpression(@"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                + "@"
+                + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$",
+                ErrorMessage = "Невірно набрана пошта")]
             public string Email { get; set; }
 
             [Required]
