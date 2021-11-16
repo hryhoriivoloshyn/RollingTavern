@@ -33,6 +33,7 @@
         setAddress();
     });
     function setAddress() {
+        document.getElementById('mod').style = "min-height: 590px; right: 100px";
         let form = document.querySelector("#address");
         var input = form.value;
         address = input;
@@ -109,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-4" style="right:100px">
+            <div class="col-4" id="mod" style="right:100px">
                 <div class="form-row profile-row">
                     <div class="col-md-8">
                         <div class="form-group">
@@ -122,14 +123,13 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="AdditionalRequirements">Додаткові вимоги: </label>
-                            <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none;"></textarea>
                             <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
                         </div>
                         <div>
                             <input type="button" value="Перевірити адресу" style="border-radius:3px;font-family: 'Bluu Next Cyrillic' ;margin-top:8px;margin-bottom:8px; background: #B82406;font-size:16px;color:white;" onclick="setAddress()">
                         </div>
                         <div id="map"></div>
-
                     </div>
                 </div>
             </div>
