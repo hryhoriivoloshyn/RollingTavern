@@ -62,7 +62,8 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
             [DataType(DataType.Upload)]
             [Display(Name = "Завантажте фото профілю")]
-            public string ProfilePicture { get; set; }
+            [AllowedExtensions(new string[]{".png", ".jpg",".jpeg",".gif"})]
+            public IFormFile ProfilePicture { get; set; }
         }
 
    
@@ -104,18 +105,23 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
                 var email = await _userManager.GetEmailAsync(user);
                 string profilePicturePath = "/ProfilePictures/" + email + "." + pictureExtension;
-
-                using (var fileStream =
-                    new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
-                {
-                    if(user.ProfilePicture!=null)
+               
+                    using (var fileStream =
+                        new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
                     {
-                        FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
-                        oldPicture.Delete();
+                        if (user.ProfilePicture != null)
+                        {
+                            FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
+                            oldPicture.Delete();
+                        }
+
+                        await profilePicture.CopyToAsync(fileStream);
                     }
-                    await profilePicture.CopyToAsync(fileStream);
-                }
-                user.ProfilePicture = profilePicturePath;
+
+                    user.ProfilePicture = profilePicturePath;
+
+                
+               
             }
         }
 

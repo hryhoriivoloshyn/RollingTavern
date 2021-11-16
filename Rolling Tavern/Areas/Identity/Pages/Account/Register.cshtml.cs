@@ -66,6 +66,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             [Phone]
             [Display(Name="Номер телефону")]
             [DataType(DataType.PhoneNumber)]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Введене значення не відповідає номеру телефона")]
             public string Phone { get; set; }
 
             [Required]
@@ -98,8 +99,9 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Upload)]
+            [AllowedExtensions(new string[]{".png",".jpg","jpeg"})]
             [Display(Name ="Завантажте фото профілю")]
-            public string ProfilePicture { get; set; }
+            public IFormFile  ProfilePicture { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -111,6 +113,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         private async Task<string> UploadPicture(IFormFile profilePicture)
         {
             const string defaultPicturePath = "/ProfilePictures/DefaultUser.png";
+            
             if (profilePicture == null)
             {
                 return defaultPicturePath;
