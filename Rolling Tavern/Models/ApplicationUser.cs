@@ -8,6 +8,8 @@ namespace Rolling_Tavern.Models
 {
     public class ApplicationUser : IdentityUser<long>
     {
+        private string _profilePicture;
+
         [PersonalData]
         public string FirstName { get; set; }
         
@@ -16,9 +18,21 @@ namespace Rolling_Tavern.Models
        
         [PersonalData]
         public DateTime? DateOfBirth { get; set; }
-        
+
         [PersonalData]
-        public string ProfilePicture { get; set; }
+        public string ProfilePicture
+        {
+            get
+            {
+                if (_profilePicture == null)
+                {
+                    return "/images/DefaultUser.png";
+                }
+
+                return _profilePicture;
+            }
+            set { _profilePicture = value; }
+        }
 
 
         [PersonalData]

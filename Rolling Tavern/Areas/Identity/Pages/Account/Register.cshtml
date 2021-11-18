@@ -13,7 +13,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-label">
                 <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
+                <input asp-for="Input.Email" class="form-control" type="email"/>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
@@ -31,7 +31,7 @@
 
             <div class="form-label">
                 <label asp-for="Input.ProfilePicture"></label>
-                <input asp-for="Input.ProfilePicture" type="file" id="fileUpload" accept="image/png,image/jpg,image/jpeg" />
+                <input asp-for="Input.ProfilePicture" type="file" id="fileUpload" accept="image/png,image/jpg,image/jpeg,.gif" />
                 <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
             </div>
 
