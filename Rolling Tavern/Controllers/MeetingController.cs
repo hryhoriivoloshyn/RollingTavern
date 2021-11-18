@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -113,6 +115,7 @@ namespace Rolling_Tavern.Controllers
 
         // GET: Meeting/Create
         [HttpGet]
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName");
