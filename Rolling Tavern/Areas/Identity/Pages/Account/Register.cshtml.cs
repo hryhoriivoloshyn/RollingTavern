@@ -31,7 +31,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -57,10 +57,15 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Електронна пошта")]
+            [RegularExpression(@"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                + "@"
+                + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$",
+                ErrorMessage = "Невірно набрана пошта")]
             public string Email { get; set; }
 
             [Required]
             [Display(Name="Нікнейм")]
+            [StringLength(32, ErrorMessage = "{0} повинно бути не більше {1} літер")]
             public string UserName { get; set; }
 
             [Phone]
@@ -99,7 +104,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Upload)]
-            [AllowedExtensions(new string[]{".png",".jpg","jpeg"})]
+            [AllowedExtensions(new string[]{".png",".jpg","jpeg",".gif"})]
             [Display(Name ="Завантажте фото профілю")]
             public IFormFile  ProfilePicture { get; set; }
         }
@@ -116,7 +121,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             
             if (profilePicture == null)
             {
-                return defaultPicturePath;
+                return null;
             }
 
             string pictureType = profilePicture.ContentType;
@@ -142,7 +147,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
                 
 
                 var picturePath = await UploadPicture(profilePicture);
-                var user = new ApplicationUser { UserName = Input.Email, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
+                var user = new ApplicationUser { UserName = Input.UserName, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 

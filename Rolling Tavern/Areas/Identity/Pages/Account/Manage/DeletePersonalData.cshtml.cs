@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,18 +13,22 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
+       
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly IWebHostEnvironment _appEnvironment;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger, IWebHostEnvironment appEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _appEnvironment = appEnvironment;
+
         }
         public ApplicationUser UserInfo { get; set; }
 
@@ -52,6 +58,24 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
+        private async Task DeleteProfilePicture(ApplicationUser user)
+        {
+            if (user.ProfilePicture != null)
+            {
+                FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
+                if (oldPicture.Exists)
+                {
+                    oldPicture.Delete();
+                }
+
+                return;
+            }
+
+            return;
+        }
+        
+
+        
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -59,6 +83,8 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            UserInfo = user;
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
             if (RequirePassword)
@@ -77,6 +103,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
 
+            DeleteProfilePicture(user);
             await _signInManager.SignOutAsync();
 
             _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
