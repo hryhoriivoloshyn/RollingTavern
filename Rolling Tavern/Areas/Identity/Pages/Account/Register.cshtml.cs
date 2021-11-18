@@ -142,10 +142,15 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-               
+                var userWithSameMail = _userManager.FindByEmailAsync(Input.Email);
+                if (userWithSameMail!=null)
+                {
+                    ModelState.AddModelError(string.Empty, "Така поштова скринька вже існує");
+                    return Page();
+                }
                 var picturePath = await UploadPicture(Input.ProfilePicture);
                 var user = new ApplicationUser { UserName = Input.UserName, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
-                
+               
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 
                 if (result.Succeeded)
