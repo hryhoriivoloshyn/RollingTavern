@@ -8,10 +8,15 @@
     </p>
     <div class="btn-group" style="padding-left: 30px; text-align: left; padding-bottom: 60px">
         <div>
-            <button type="button" class="btn btn-danger" style="font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82306 ">Почати пошук!</button>
+            <form asp-area="" asp-controller="Meeting" asp-action="Index">
+                <button type="submit" class="btn btn-danger" style="font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82306 ">Почати пошук!</button>
+            </form>
         </div>
         <div>
-            <button type="button" class="btn btn-danger" style="margin-left:20px;font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82306 ">Створити зустріч!</button>
+            <form asp-area="" asp-controller="Meeting" asp-action="Create">
+                <button type="submit" class="btn btn-danger" style="margin-left:20px;font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82306 ">Створити зустріч!</button>
+            </form>
+           
         </div>
     </div>
 </div>
