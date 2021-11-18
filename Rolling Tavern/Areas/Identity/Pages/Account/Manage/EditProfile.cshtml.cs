@@ -37,6 +37,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
 
         public string Username { get; set; }
+        public string Email { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -46,6 +47,10 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            
+
+            
+
             [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
             [DataType(DataType.Text)]
             [Display(Name = "Ім'я*")]
@@ -70,15 +75,17 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
-
+            Email = email;
             UserInfo = user;
 
 
             Input = new InputModel
             {
+               
                 PhoneNumber = phoneNumber,
                 FirstName  = user.FirstName,
                 LastName = user.LastName
@@ -105,16 +112,22 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
                 var email = await _userManager.GetEmailAsync(user);
                 string profilePicturePath = "/ProfilePictures/" + email + "." + pictureExtension;
-               
-                    using (var fileStream =
+
+                if (user.ProfilePicture != GlobalVariables.DefaultUserImage)
+                {
+                  
+                    FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
+                    if (oldPicture.Exists)
+                    {
+                        oldPicture.Delete();
+                    }
+                    
+                }
+
+                using (var fileStream =
                         new FileStream(_appEnvironment.WebRootPath + profilePicturePath, FileMode.Create))
                     {
-                        if (user.ProfilePicture != null)
-                        {
-                            FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
-                            oldPicture.Delete();
-                        }
-
+                        
                         await profilePicture.CopyToAsync(fileStream);
                     }
 
@@ -139,7 +152,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-
+            
             await UploadPicture(profilePicture, user);
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;

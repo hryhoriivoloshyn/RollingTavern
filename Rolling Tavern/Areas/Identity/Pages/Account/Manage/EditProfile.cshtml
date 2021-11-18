@@ -16,10 +16,37 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row profile-row">
                 <div class="col-md-8">
+                    @*<form>
+            <fieldset disabled>
+                <input type="string" disabled="true" class="form-control" value=""></input>
+                <input type="string" disabled="true" class="form-control" value="@"></input>
+            </fieldset>
+        </form>*@
+                    <div class="form-group">
+                        <a>
+                            Нікнейм
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            @Model.Username
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            Поштова скринька
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <a>
+                            @Model.Email
+                        </a>
+                    </div>
                     <div class="form-group">
                         <label asp-for="Input.LastName">Ім`я</label>
                         <input asp-for="Input.FirstName" class="form-control" enabled />
                     </div>
+
                     <div class="form-group">
                         <label asp-for="Input.LastName">Прізвище</label>
                         <input asp-for="Input.LastName" class="form-control" enabled />
@@ -30,8 +57,8 @@
                     </div>
                     <div class="form-group">
                         <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
-                        <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg" onchange="readURL(this);" />
-                        <img id="blah" src="#" alt="Оберіть фото профілю" style="margin-top:20px;margin-bottom:5px" />
+                        <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this);" />
+                        <img id="blah" src="#" alt="Оберіть фото профілю" style="margin-top: 20px; margin-bottom: 5px" />
                     </div>
                 </div>
             </div>

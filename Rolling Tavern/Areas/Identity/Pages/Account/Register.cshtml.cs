@@ -65,6 +65,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
 
             [Required]
             [Display(Name="Нікнейм")]
+            [StringLength(32, ErrorMessage = "{0} повинно бути не більше {1} літер")]
             public string UserName { get; set; }
 
             [Phone]
@@ -103,7 +104,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Upload)]
-            [AllowedExtensions(new string[]{".png",".jpg","jpeg"})]
+            [AllowedExtensions(new string[]{".png",".jpg","jpeg",".gif"})]
             [Display(Name ="Завантажте фото профілю")]
             public IFormFile  ProfilePicture { get; set; }
         }
@@ -120,7 +121,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             
             if (profilePicture == null)
             {
-                return defaultPicturePath;
+                return null;
             }
 
             string pictureType = profilePicture.ContentType;
@@ -146,7 +147,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
                 
 
                 var picturePath = await UploadPicture(profilePicture);
-                var user = new ApplicationUser { UserName = Input.Email, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
+                var user = new ApplicationUser { UserName = Input.UserName, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 
