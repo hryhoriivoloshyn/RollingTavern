@@ -7,7 +7,7 @@
     section.profile {
         color: black;
         border: 1px solid black;
-        height: 100%;
+        height: auto;
         margin-left: 15%;
         border-radius: 10px;
 
@@ -35,7 +35,7 @@
 
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <center> 
+            <center>
                 <a style="margin: auto;color: black" id="meeting-history" asp-page="/Account/Manage/Index">Історія зустрічей</a>
             </center>
             <hr />
@@ -46,11 +46,16 @@
             <hr />
         </li>
         <li class="nav-item">
+            <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
+            <a style="margin-left: 5%; color: black" id="profile" asp-page="./DeletePersonalData">Видалити профіль</a>
+            <hr />
+        </li>
+        <li class="nav-item">
             <center>
                 @*<img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">*@
                 <a style="margin-bottom: 10%; color: black" id="email" asp-page="./Logout">Вихід</a>
             </center>
-            <hr/>
+            <hr />
         </li>
 
     </ul>

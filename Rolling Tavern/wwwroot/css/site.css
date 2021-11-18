@@ -71,10 +71,10 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    background: black;
+    
 }
 header {
-    background: black;
+    background: rgba(28, 0, 19, 1);
 }
 
 p{
