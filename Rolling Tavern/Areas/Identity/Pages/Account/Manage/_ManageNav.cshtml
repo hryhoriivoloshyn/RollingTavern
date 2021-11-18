@@ -41,18 +41,19 @@
             <hr />
         </li>
         <li class="nav-item">
-            <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
-            <a style="margin-left: 5%; color: black" id="profile" asp-page="./EditProfile">Редагувати профіль</a>
-            <hr />
+            <center>
+                <a style="margin: auto; color: black" id="profile" asp-page="./EditProfile">Редагувати профіль</a>
+            </center>
+                <hr />
         </li>
         <li class="nav-item">
-            <img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">
-            <a style="margin-left: 5%; color: black" id="profile" asp-page="./DeletePersonalData">Видалити профіль</a>
+            <center>
+                <a style="margin: auto; color: black" id="profile" asp-page="./DeletePersonalData">Видалити профіль</a>
+            </center>
             <hr />
         </li>
         <li class="nav-item">
             <center>
-                @*<img src="~/images/settings_icon.png" alt="" class="round" style="height: 30px; margin-left: 10%; width: 30px">*@
                 <a style="margin-bottom: 10%; color: black" id="email" asp-page="./Logout">Вихід</a>
             </center>
             <hr />
@@ -64,17 +65,6 @@
             window.location.replace(input);
         };
     </script>
-    @*
-        <ul class="nav nav-pills flex-column">
-            <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-            <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-            <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-            @if (hasExternalLogins)
-            {
-                <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
-            }
-            <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-            <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-        </ul>*@
+
 </section>
 
