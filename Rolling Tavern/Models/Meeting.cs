@@ -40,9 +40,10 @@ namespace Rolling_Tavern.Models
         public string PhotoLink { get; set; }
         public long? CreatorId { get; set; }
         public int? GameId { get; set; }
+        
+
         [Display(Name = "Вікові обмеження")]
-        [MinLength(1)]
-        [MaxLength(2)]
+        [RegularExpression("0?[123456789][0123456789]?", ErrorMessage = "Введіть обмеження віку від 1 до 99")]
         public int? MinimalAge { get; set; }
 
         public virtual BoardGame Game { get; set; }
