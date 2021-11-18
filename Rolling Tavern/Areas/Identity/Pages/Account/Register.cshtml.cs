@@ -116,9 +116,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
         }
 
         private async Task<string> UploadPicture(IFormFile profilePicture)
-        {
-            const string defaultPicturePath = "/ProfilePictures/DefaultUser.png";
-            
+        {   
             if (profilePicture == null)
             {
                 return null;
@@ -136,7 +134,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
             return profilePicturePath;
         }
 
-        public async Task<IActionResult> OnPostAsync(IFormFile profilePicture, string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -144,9 +142,8 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                
-
-                var picturePath = await UploadPicture(profilePicture);
+               
+                var picturePath = await UploadPicture(Input.ProfilePicture);
                 var user = new ApplicationUser { UserName = Input.UserName, PhoneNumber = Input.Phone, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, DateOfBirth = Input.DateOfBirth, ProfilePicture = picturePath };
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
