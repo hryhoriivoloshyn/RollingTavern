@@ -27,9 +27,11 @@
 <section class="profile" style="background-color:white">
 
     <p>
-        <center> <img src="@Model.UserInfo.ProfilePicture" alt="" class="round" style="height: 100px; width: 100px"></center>
+        <center>
+            <img src="@Model.UserInfo.ProfilePicture" alt="" class="round" style="height: 100px; width: 100px">
+        </center>
     </p>
-    <p><center> @Model.UserInfo.FirstName<br />@Model.UserInfo.LastName</center></p>
+    <p><center> @Model.UserInfo.FirstName<br />@Model.UserInfo.LastName<br />(@Model.UserInfo.UserName)</center></p>
     <hr />
 
 
