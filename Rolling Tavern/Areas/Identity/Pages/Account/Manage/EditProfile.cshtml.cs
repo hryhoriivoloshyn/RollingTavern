@@ -113,7 +113,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 var email = await _userManager.GetEmailAsync(user);
                 string profilePicturePath = "/ProfilePictures/" + email + "." + pictureExtension;
 
-                if (user.ProfilePicture != null)
+                if (user.ProfilePicture != GlobalVariables.DefaultUserImage)
                 {
                   
                     FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);

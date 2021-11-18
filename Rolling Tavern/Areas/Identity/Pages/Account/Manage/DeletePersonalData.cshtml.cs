@@ -60,7 +60,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
         private async Task DeleteProfilePicture(ApplicationUser user)
         {
-            if (user.ProfilePicture != null)
+            if (user.ProfilePicture != GlobalVariables.DefaultUserImage)
             {
                 FileInfo oldPicture = new FileInfo(_appEnvironment.WebRootPath + user.ProfilePicture);
                 if (oldPicture.Exists)
