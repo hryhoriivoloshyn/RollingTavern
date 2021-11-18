@@ -56,7 +56,9 @@
         </li>
         <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%; ">
             <center>
-                <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="email" asp-page="./Logout">Вихід</a>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" id="email" style="border: 0px;font-size: 20px; font-family: 'Bluu Next Cyrillic'; margin-left: auto; margin-right: auto">Вийти</button>
+                </form>
             </center>
             <hr style="margin-top: 3%; margin-bottom: 3%; "/>
         </li>
