@@ -142,7 +142,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var userWithSameMail = _userManager.FindByEmailAsync(Input.Email);
+                var userWithSameMail = await _userManager.FindByEmailAsync(Input.Email);
                 if (userWithSameMail!=null)
                 {
                     ModelState.AddModelError(string.Empty, "Така поштова скринька вже існує");
