@@ -5,28 +5,49 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-</div>
+<style>
+    section.profileLeft {
+        color: black;
+        border: 1px solid black;
+        height: fit-content;
+        width: 90%;
+        border-radius: 10px;
+        padding-bottom: 10px;
+    }
 
-<div>
-    <form id="delete-user" method="post" class="form-group">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        @if (Model.RequirePassword)
-        {
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-        }
-        <button class="btn btn-danger" type="submit">Delete data and close my account</button>
-    </form>
-</div>
+    button {
+        background-color: Transparent;
+        border: 1px solid black;
+    }
+</style>
+
+<section class="profileLeft" style="background-color:white; min-height">
+    <h4><center> Видалення акаунту </center></h4>
+    <div>
+        <form id="delete-user" method="post" class="form-group">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (Model.RequirePassword)
+            {
+                <div class="form-group">
+                    <center>
+                        <label asp-for="Input.Password">Пароль</label>
+                        <input asp-for="Input.Password" class="form-control" style="width:60%;" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <input type="checkbox" id="agreed" name="agreed">
+                        <label for="scales">Підтвердити видалення</label>
+                    </center>
+                   
+                </div>
+            }
+        <center>
+            <button class="btn btn-danger" type="submit">Видалити акаунт та персональні дані!</button>
+        </center>
+            
+        </form>
+    </div>
+</section>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
