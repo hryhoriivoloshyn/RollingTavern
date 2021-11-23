@@ -299,16 +299,30 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
-
-            var meeting = await _context.Meetings
-                .Include(m => m.Creator)
-                .Include(m => m.Game)
-                .FirstOrDefaultAsync(m => m.MeetingId == id);
+            var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
+            BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
+            ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
+            List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
+            Meeting meeting = new Meeting
+            {
+                MeetingId = temp.MeetingId,
+                MeetingName = temp.MeetingName,
+                DateOfMeeting = temp.DateOfMeeting,
+                AddresOfMeeting = temp.AddresOfMeeting,
+                Description = temp.Description,
+                AdditionalRequirements = temp.AdditionalRequirements,
+                PhotoLink = temp.PhotoLink,
+                CreatorId = temp.CreatorId,
+                MinimalAge = temp.MinimalAge,
+                GameId = temp.GameId,
+                Game = game,
+                Creator = creator,
+                Requests = requests
+            };
             if (meeting == null)
             {
                 return NotFound();
             }
-
             return View(meeting);
         }
 
@@ -318,6 +332,11 @@ namespace Rolling_Tavern.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var meeting = await _context.Meetings.FindAsync(id);
+            List<Request> requests = await _context.Requests.Where(i => i.MeetingId == meeting.MeetingId).ToListAsync();
+            foreach(var item in requests)
+            {
+                _context.Requests.Remove(item);
+            }
             _context.Meetings.Remove(meeting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

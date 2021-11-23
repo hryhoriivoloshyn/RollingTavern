@@ -66,7 +66,8 @@
                         <div class="form-group">
                             @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
                             {
-                                <a class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                                <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                                <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
                             }
                             else
                             {
