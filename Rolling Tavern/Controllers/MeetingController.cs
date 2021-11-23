@@ -195,15 +195,39 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
-
-            var meeting = await _context.Meetings.FindAsync(id);
-            if (meeting == null)
+            else
             {
-                return NotFound();
+                var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
+                BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
+                ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
+                List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
+                Meeting meeting = new Meeting
+                {
+                    MeetingId = temp.MeetingId,
+                    MeetingName = temp.MeetingName,
+                    DateOfMeeting = temp.DateOfMeeting,
+                    AddresOfMeeting = temp.AddresOfMeeting,
+                    Description = temp.Description,
+                    AdditionalRequirements = temp.AdditionalRequirements,
+                    PhotoLink = temp.PhotoLink,
+                    CreatorId = temp.CreatorId,
+                    MinimalAge = temp.MinimalAge,
+                    GameId = temp.GameId,
+                    Game = game,
+                    Creator = creator,
+                    Requests = requests
+                };
+                if (meeting == null)
+                {
+                    return null;
+                }
+                if (meeting == null)
+                {
+                    return NotFound();
+                }
+                ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName", meeting.GameId);
+                return View(meeting);
             }
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id", meeting.CreatorId);
-            ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName", meeting.GameId);
-            return View(meeting);
         }
 
         // POST: Meeting/Edit/5
@@ -211,18 +235,43 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting)
+        public async Task<IActionResult> Edit(int id, [Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
         {
-            if (id != meeting.MeetingId)
+/*            if (id != meeting.MeetingId)
             {
                 return NotFound();
-            }
+            }*/
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(meeting);
+                    var picturePath = "new";
+                    if (meetingPicture==null)
+                    {
+                        var meet = await _context.Meetings.Where(i=>i.MeetingId==id).FirstOrDefaultAsync();
+                        picturePath = meet.PhotoLink;
+                    }
+                    else
+                    {
+                        picturePath = await UploadPicture(meetingPicture, meeting);
+                    }
+                    var loginedUser = await _userManager.GetUserAsync(User);
+                    long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(loginedUser));
+                    meeting.MeetingId = id;
+                    meeting.PhotoLink = picturePath;
+                    meeting.CreatorId = userId;
+                    Meeting meetingChanged = await _context.Meetings.Where(i => i.MeetingId == meeting.MeetingId).FirstAsync();
+                    meetingChanged.MeetingId = meeting.MeetingId;
+                    meetingChanged.MeetingName = meeting.MeetingName;
+                    meetingChanged.DateOfMeeting = meeting.DateOfMeeting;
+                    meetingChanged.AddresOfMeeting = meeting.AddresOfMeeting;
+                    meetingChanged.Description = meeting.Description;
+                    meetingChanged.AdditionalRequirements = meeting.AdditionalRequirements;
+                    meetingChanged.PhotoLink = meeting.PhotoLink;
+                    meetingChanged.CreatorId = meeting.CreatorId;
+                    meetingChanged.GameId = meeting.GameId;
+                    meetingChanged.MinimalAge = meeting.MinimalAge;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

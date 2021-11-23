@@ -4,70 +4,173 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
-<h4>Meeting</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MeetingId" />
-            <div class="form-group">
-                <label asp-for="MeetingName" class="control-label"></label>
-                <input asp-for="MeetingName" class="form-control" />
-                <span asp-validation-for="MeetingName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateOfMeeting" class="control-label"></label>
-                <input asp-for="DateOfMeeting" class="form-control" />
-                <span asp-validation-for="DateOfMeeting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddresOfMeeting" class="control-label"></label>
-                <input asp-for="AddresOfMeeting" class="form-control" />
-                <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AdditionalRequirements" class="control-label"></label>
-                <input asp-for="AdditionalRequirements" class="form-control" />
-                <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhotoLink" class="control-label"></label>
-                <input asp-for="PhotoLink" class="form-control" />
-                <span asp-validation-for="PhotoLink" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatorId" class="control-label"></label>
-                <select asp-for="CreatorId" class="form-control" asp-items="ViewBag.CreatorId"></select>
-                <span asp-validation-for="CreatorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameId" class="control-label"></label>
-                <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
-                <span asp-validation-for="GameId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinimalAge" class="control-label"></label>
-                <input asp-for="MinimalAge" class="form-control" />
-                <span asp-validation-for="MinimalAge" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    #map {
+        height: 71%;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script src="~/js/map.js"></script>
+<script>
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHN1cmlrYXBwYSIsImEiOiJja3Z3anY2czcwZjU1Mm5vZWZjNDF3YXppIn0.15HnrAoUseWpJvYgD8a1eg';
+    const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    var address;
+    window.onload = function () {
+        setAddress();
+    }
+    function setAddress() {
+        document.getElementById('mod').style = "min-height: 590px; right: 100px";
+        let form = document.querySelector("#address");
+        var input = form.value;
+        address = input;
+        mapboxClient.geocoding
+            .forwardGeocode({
+                query: address + ', Харьков',
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then((response) => {
+                if (
+                    !response ||
+                    !response.body ||
+                    !response.body.features ||
+                    !response.body.features.length
+                ) {
+                    console.error('Invalid response:');
+                    console.error(response);
+                    return;
+                }
+                const feature = response.body.features[0];
 
-<div>
-    <a asp-action="Index">Back to List</a>
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+
+                // Create a marker and add it to the map.
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            });
+    }
+</script>
+<div class="page-content">
+    <h2 style="text-align:center">Редагування зустрічі</h2>
+    <hr style="width:60vw" />
+    <h6 style="text-align:center">* - Обов'язкові поля</h6>
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+        <div class="row justify-content-around">
+            <div class="col-4" style="margin-left:250px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label asp-for="MeetingName">*Назва зустрічі: </label>
+                            <input asp-for="MeetingName" class="form-control" enabled />
+                            <span asp-validation-for="MeetingName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PhotoLink">Фото зустрічі: </label>
+                            <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this)" />
+                            <span asp-validation-for="PhotoLink" class="text-danger"></span>
+                            <div style="text-align:center">
+                                <img id="meet" src="@Model.PhotoLink" alt="Оберіть фото" style="margin-top:10px; width: 300px; height:300px;" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateOfMeeting">*Дата та час проведення зустрічі: </label>
+                            <input asp-for="DateOfMeeting" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="DateOfMeeting" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AddresOfMeeting">*Адреса зустрічі: </label>
+                            <input asp-for="AddresOfMeeting" class="form-control" id="address" enabled />
+                            <span asp-validation-for="AddresOfMeeting" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description">Опис зустрічі: </label>
+                            <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4" id="mod" style="right:100px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>Назва гри: </label>
+                            <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Вікові обмеження: </label>
+                            <input asp-for="MinimalAge" class="form-control" enabled />
+                            <span asp-validation-for="MinimalAge" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AdditionalRequirements">Додаткові вимоги: </label>
+                            <textarea asp-for="AdditionalRequirements" class="form-control" id="exampleFormControlTextarea1" rows="3" style="resize: none;"></textarea>
+                            <span asp-validation-for="AdditionalRequirements" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <input type="button" value="Перевірити адресу" style="border-radius:3px;font-family: 'Bluu Next Cyrillic' ;margin-top:8px;margin-bottom:8px; background: #B82406;font-size:16px;color:white;" onclick="setAddress()">
+                        </div>
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <center>
+                <div class="form-group">
+                    <input type="submit" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" value="Змінити" class="btn btn-primary" />
+                </div>
+                <div>
+                    <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустрічей</a>
+                </div>
+            </center>
+        </div>
+    </form>
 </div>
+<style>
+    .form-group, h2, h6 {
+        font-family: 'Bluu Next Cyrillic';
+        color: #333333;
+    }
+</style>
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var h = $('#meet').height();
+            var w = $('#meet').width();
+            reader.onload = function (e) {
+                $('#meet')
+                    .attr('src', e.target.result)
+                    .width(300)
+                    .height(300);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
