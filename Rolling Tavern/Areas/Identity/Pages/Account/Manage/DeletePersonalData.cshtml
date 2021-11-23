@@ -23,29 +23,25 @@
 </style>
 
 <section class="profileLeft" style="background-color:white; min-height">
-    <h4><center> Видалення акаунту </center></h4>
+    <h4><center style="font-family: 'Bluu Next Cyrillic';"> Видалення акаунту </center></h4>
     <div>
         <form id="delete-user" method="post" class="form-group">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger" ></div>
             @if (Model.RequirePassword)
             {
-                <div class="form-group">
-                    <center>
-                        <label asp-for="Input.Password">Пароль</label>
-                        <input asp-for="Input.Password" class="form-control" style="width:60%;" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        <input type="checkbox" id="agreed" name="agreed">
-                        <label for="scales">Підтвердити видалення</label>
-                    </center>
-                   
+                <div class="form-group" style=" margin-left: 50px; margin-top: 5px;">
+                    <label asp-for="Input.Password" style="font-family: 'Bluu Next Cyrillic';">Пароль</label>
+                    <input asp-for="Input.Password" class="form-control" style="width:60%;" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <input type="checkbox" id="agreed" name="agreed">
+                    <label for="scales" style="font-family: 'Bluu Next Cyrillic';">Підтвердити видалення</label>
+
                 </div>
             }
-        <center>
-            <button class="btn btn-danger" type="submit">Видалити акаунт та персональні дані!</button>
-        </center>
-            
+            <button class="btn btn-primary align-middle" type="submit" style="margin: auto; margin-bottom: 10px; display: flex; font-family: 'Bluu Next Cyrillic'; background: #B82406; font-size: 20px;">Видалити акаунт та персональні дані!</button>
+
         </form>
-    </div>
+          </div>
 </section>
 
 
