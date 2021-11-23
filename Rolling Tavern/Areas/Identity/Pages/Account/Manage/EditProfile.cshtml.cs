@@ -70,7 +70,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
             [DataType(DataType.Upload)]
             [Display(Name = "Завантажте фото профілю")]
-            [AllowedExtensions(new string[]{".png", ".jpg",".jpeg",".gif"})]
+            [AllowedExtensions(new string[] { ".png", ".jpg", "jpeg", ".gif" })]
             public IFormFile ProfilePicture { get; set; }
         }
 
@@ -142,7 +142,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         }
 
 
-        public async Task<IActionResult> OnPostAsync(IFormFile profilePicture)
+        public async Task<IActionResult> OnPostAsync()
             {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -156,13 +156,15 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
             
-            await UploadPicture(profilePicture, user);
+            await UploadPicture(Input.ProfilePicture, user);
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
             user.PhoneNumber = Input.PhoneNumber;
             db.Users.Update(user);
             await db.SaveChangesAsync();
             return RedirectToPage();
+
+
             //По идее так писать профессиональнее, но для кастомных полей сделать логику сложнее
             //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             //if (Input.PhoneNumber != phoneNumber)

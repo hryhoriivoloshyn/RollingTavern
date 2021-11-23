@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
-                        <input type="file" name="ProfilePicture" id="fileUpload" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this);" />
+                        <input asp-for="Input.ProfilePicture" type="file" id="fileUpload" accept="image/png,image/jpg,image/jpeg,.gif" onchange="readURL(this);" />
                         <img id="blah" src="#" alt="Оберіть фото профілю" style="margin-top: 20px; margin-bottom: 5px" />
                     </div>
                 </div>
