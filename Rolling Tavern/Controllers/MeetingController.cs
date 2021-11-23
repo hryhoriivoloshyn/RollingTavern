@@ -30,7 +30,17 @@ namespace Rolling_Tavern.Controllers
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
-
+        public class CurrentInfo
+        {
+            public ApplicationUser CurrentUser;
+            public Meeting CurrentMeeting;
+            public CurrentInfo() {}
+            public CurrentInfo(ApplicationUser user ,Meeting meeting)
+            {
+                CurrentUser = user;
+                CurrentMeeting = meeting;
+            }
+        }
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
             const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
@@ -98,19 +108,42 @@ namespace Rolling_Tavern.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return null;
             }
-
-            var meeting = await _context.Meetings
-                .Include(m => m.Creator)
-                .Include(m => m.Game)
-                .FirstOrDefaultAsync(m => m.MeetingId == id);
-            if (meeting == null)
+            else
             {
-                return NotFound();
+                ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+                var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
+                BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
+                ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
+                List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
+                Meeting meeting = new Meeting
+                {
+                    MeetingId = temp.MeetingId,
+                    MeetingName = temp.MeetingName,
+                    DateOfMeeting = temp.DateOfMeeting,
+                    AddresOfMeeting = temp.AddresOfMeeting,
+                    Description = temp.Description,
+                    AdditionalRequirements = temp.AdditionalRequirements,
+                    PhotoLink = temp.PhotoLink,
+                    CreatorId = temp.CreatorId,
+                    MinimalAge = temp.MinimalAge,
+                    GameId = temp.GameId,
+                    Game = game,
+                    Creator = creator,
+                    Requests = requests
+                };
+                if (meeting == null)
+                {
+                    return null;
+                }
+                CurrentInfo info = new()
+                {
+                    CurrentUser = currentUser,
+                    CurrentMeeting = meeting
+                };
+                return View(info);
             }
-
-            return View(meeting);
         }
 
         // GET: Meeting/Create

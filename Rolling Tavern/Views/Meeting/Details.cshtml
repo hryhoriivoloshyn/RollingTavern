@@ -1,72 +1,171 @@
-﻿@model Rolling_Tavern.Models.Meeting
+﻿@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo 
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+<script src="~/js/map.js"></script>
 
-<div>
-    <h4>Meeting</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MeetingName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MeetingName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateOfMeeting)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DateOfMeeting)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AddresOfMeeting)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AddresOfMeeting)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AdditionalRequirements)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AdditionalRequirements)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PhotoLink)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhotoLink)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.GameName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Creator)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Creator.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MinimalAge)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MinimalAge)
-        </dd>
-    </dl>
+<div class="page-content" onload="setAddress()">
+    <h2 style="text-align:center">@Model.CurrentMeeting.MeetingName</h2>
+    <hr style="width:60vw" />
+    <form>
+        <div class="row justify-content-around">
+            <div class="col-4" style="margin-left:250px; width:fit-content;">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
+                        </div>
+                        <div class="form-group">
+                            <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
+                            <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        </div>
+                        <div class="form-group">
+                            <h5>Опис зустрічі: </h5>
+                            <label>@Model.CurrentMeeting.Description</label>
+                        </div>
+                        <div class="form-group">
+                            <h5>Додаткові вимоги до учасників: </h5>
+                            <label>@Model.CurrentMeeting.AdditionalRequirements</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4" id="mod" style="right:100px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <h5>Організатор зустрічі: </h5>
+                            <div>
+                                <img src="@Model.CurrentMeeting.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px" /><h5 style="margin-left:25px;">@Model.CurrentMeeting.Creator.FirstName</h5>
+                                <div style="text-align:center">
+                                    <label>
+                                        Телефон організатора буде
+                                        доступний після вступу до гри
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @if (Model.CurrentMeeting.Requests.Any() == true)
+                            {
+                                <label style="text-align:center;">
+                                    @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено,
+                                    стань наступним!
+                                </label>
+                            }
+                            else
+                            {
+                                <label style="text-align:center;">Гравців ще не знайдено.</label>
+                            }
+                        </div>
+                        <div class="form-group">
+                            @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                            {
+                                <a class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;">Прийняти участь!</a>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label>Вікові обмеження: @Model.CurrentMeeting.MinimalAge</label>
+                        </div>
+
+                        <div class="form-group">
+                            <h5>Адреса зустрічі:</h5>
+                            <label id="address">@Model.CurrentMeeting.AddresOfMeeting</label>
+                        </div>
+                        <div class="form-group" id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <center>
+                <div>
+                    <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустрічей</a>
+                </div>
+            </center>
+        </div>
+    </form>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.MeetingId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    .form-group, h2, h5, h6 {
+        font-family: 'Bluu Next Cyrillic';
+        color: #333333;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .round {
+        height: 50%;
+        border-radius: 100px; /* Радиус скругления */
+        border: 3px solid black; /* Параметры рамки */
+        box-shadow: 0 0 7px #666; /* Параметры тени */
+    }
+
+    #map {
+        height: 200px;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script>
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'pk.eyJ1IjoidHN1cmlrYXBwYSIsImEiOiJja3Z3anY2czcwZjU1Mm5vZWZjNDF3YXppIn0.15HnrAoUseWpJvYgD8a1eg';
+    const mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    var address;
+    window.onload = function() {
+        setAddress();
+    }
+    function setAddress() {
+        address = document.getElementById('address').textContent;
+        mapboxClient.geocoding
+            .forwardGeocode({
+                query: address + ', Харьков',
+                autocomplete: false,
+                limit: 1
+            })
+            .send()
+            .then((response) => {
+                if (
+                    !response ||
+                    !response.body ||
+                    !response.body.features ||
+                    !response.body.features.length
+                ) {
+                    console.error('Invalid response:');
+                    console.error(response);
+                    return;
+                }
+                const feature = response.body.features[0];
+
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: feature.center,
+                    zoom: 10
+                });
+
+                // Create a marker and add it to the map.
+                new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+            });
+    }
+
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
