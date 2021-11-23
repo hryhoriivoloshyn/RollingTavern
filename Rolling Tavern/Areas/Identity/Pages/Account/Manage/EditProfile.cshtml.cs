@@ -47,19 +47,22 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            
 
-            
 
+
+            [Required]
             [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
             [DataType(DataType.Text)]
             [Display(Name = "Ім'я*")]
+           
             public string FirstName { get; set; }
 
+            [Required]
             [StringLength(32, ErrorMessage = "The {0} must be at max {1} characters long.")]
             [DataType(DataType.Text)]
             [Display(Name = "Призвище*")]
             public string LastName { get; set; }
+
 
             [Phone]
             [Display(Name = "Phone number")]
