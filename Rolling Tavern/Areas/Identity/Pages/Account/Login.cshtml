@@ -12,27 +12,34 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <h1 style="text-align:center">Авторизація</h1>
         <div class="form-label">
-            <label asp-for="Input.Email"></label>
+            <label asp-for="Input.Email">Пошта</label>
             <input asp-for="Input.Email" class="form-control" />
             <span asp-validation-for="Input.Email" class="text-danger"></span>
         </div>
         <div class="form-label">
-            <label asp-for="Input.Password"></label>
+            <label asp-for="Input.Password">Пароль</label>
             <input asp-for="Input.Password" class="form-control" />
             <span asp-validation-for="Input.Password" class="text-danger"></span>
         </div>
         <div style="text-align:center" class="form-label">
             <button type="submit" class="button">Увійти</button>
         </div>
-        <div  style="text-align:center" class="form-group">
+        <div class="d-flex justify-content-between">
             <p>
-                <a id="forgot-password" style="color: black; padding-top: 10px;" asp-page="./ForgotPassword"><u>Забули пароль?</u></a>
+                <a id="forgot-password" style="color: black; padding-top: 10px; padding-left:75px; " asp-page="./ForgotPassword"><u>Забули пароль?</u></a>
+            </p>
+            <p>
+                <a id="forgot-password" style="color: black; padding-top: 10px;padding-right:55px;" asp-page="./Register"><u>Не маєте акаунту?</u></a>
             </p>
         </div>
+
     </form>
 </div>
 
 <style>
+    .button, label, input, h1{
+        font-family:'Bluu Next Cyrillic';
+    }
     body {
         background-color: #f6f0dc;
     }
@@ -63,6 +70,7 @@
         border: 0px;
         border-radius: 7px;
     }
+
 </style>
 
 
