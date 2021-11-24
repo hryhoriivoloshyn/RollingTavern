@@ -62,8 +62,8 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-
+    /* Margin bottom by footer height */
+    background-color: rgba(246, 240, 220, 1);
 }
 
 .footer {
