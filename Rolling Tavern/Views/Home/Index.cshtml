@@ -21,11 +21,14 @@
             @*<form asp-area="" asp-controller="Meeting" asp-action="Create">
                 <button type="submit" class="btn btn-danger" style="margin-left:20px;font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82306 ">Створити зустріч!</button>
             </form>*@
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item dropdown" style="text-align: center; font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82406; border-radius: 5px; margin-left: 50px; padding: 5px;">
-                    <a class="nav-link text-white" style="font-family: Bluu Next Cyrillic; font-size: 28px; padding-left: 10px; padding-right: 10px;" asp-area="" asp-controller="Meeting" asp-action="Create">Створити зустріч!</a>
-                </li>
-            </ul>
+            @if (User.IsInRole("user"))
+            {
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item dropdown" style="text-align: center; font-family: Bluu Next Cyrillic; font-size: 28px; background: #B82406; border-radius: 5px; margin-left: 50px; padding: 5px;">
+                        <a class="nav-link text-white" style="font-family: Bluu Next Cyrillic; font-size: 28px; padding-left: 10px; padding-right: 10px;" asp-area="" asp-controller="Meeting" asp-action="Create">Створити зустріч!</a>
+                    </li>
+                </ul>
+            }
         </div>
     </div>
 </div>

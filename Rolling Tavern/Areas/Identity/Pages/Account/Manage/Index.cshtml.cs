@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles="user")]
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -81,6 +83,7 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
         private async Task<List<Meeting>> GetMeetingsAsync(ApplicationUser user)
         {
             long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
+            var role = await _userManager.GetRolesAsync(user);
             List<Request> meetingsId = await db.Requests.Where(r => r.UserId == userId && r.StateId == 2).ToListAsync();
             List<Meeting> data = new List<Meeting>();
             if(meetingsId?.Any()==true)

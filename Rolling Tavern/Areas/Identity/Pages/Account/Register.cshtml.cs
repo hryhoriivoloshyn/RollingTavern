@@ -24,6 +24,7 @@ using Rolling_Tavern.Models;
 namespace Rolling_Tavern.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [Authorize(Roles = "user")]
     public class RegisterModel : PageModel
     {
         private readonly IWebHostEnvironment _appEnvironment;
@@ -155,6 +156,9 @@ namespace Rolling_Tavern.Areas.Identity.Pages.Account
                 
                 if (result.Succeeded)
                 {
+                    var currentUser = await _userManager.FindByNameAsync(user.UserName);
+                    var roleResult = await _userManager.AddToRoleAsync(currentUser, "user");
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
