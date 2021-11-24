@@ -147,6 +147,24 @@ namespace Rolling_Tavern.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> Details(int? id, Meeting meeting)
+        {
+            meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+            Request request = new()
+            {
+                MeetingId = meeting.MeetingId,
+                UserId = currentUser.Id,
+                StateId = 1
+            };
+            _context.Add(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Meeting/Create
         [HttpGet]
         [Authorize(Roles = "user")]
@@ -347,6 +365,51 @@ namespace Rolling_Tavern.Controllers
             _context.Meetings.Remove(meeting);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> ShowRequests(int? id)
+        {
+            List<Request> tempRequests = await _context.Requests.Where(i => i.MeetingId == id).ToListAsync();
+            Meeting meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            List<Request> requests = new List<Request>();
+            foreach(var item in tempRequests)
+            {
+                var user = await _context.Users.Where(i => i.Id == item.UserId).FirstOrDefaultAsync();
+                var state = await _context.States.Where(i => i.StateId == item.StateId).FirstOrDefaultAsync();
+                requests.Add(new()
+                {
+                    UserId = item.UserId,
+                    MeetingId = item.MeetingId,
+                    StateId = item.StateId,
+                    User = user,
+                    State = state
+                });
+            }
+            meeting.Requests = requests;
+            return View(meeting);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> ShowRequests(int id, int userId, string response)
+        {
+            if(response=="add")
+            {
+                Request request = await _context.Requests.Where(i => i.MeetingId == id && i.UserId == userId).FirstOrDefaultAsync();
+                request.StateId = 2;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ShowRequests));
+            }
+            else if(response=="delete")
+            {
+                Request request = await _context.Requests.Where(i => i.MeetingId == id && i.UserId == userId).FirstOrDefaultAsync();
+                request.StateId = 3;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ShowRequests));
+            }
+            return RedirectToAction(nameof(Details));
         }
 
         private bool MeetingExists(int id)
