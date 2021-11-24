@@ -1,7 +1,7 @@
 ﻿@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo 
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "ManageRequests";
 }
 
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -32,52 +32,6 @@
                             <h5>Додаткові вимоги до учасників: </h5>
                             <label>@Model.CurrentMeeting.AdditionalRequirements</label>
                         </div>
-                        @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
-                        {
-                    <div class="table-responsive" style="margin-bottom:50px;">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Нікнейм</th>
-                                    <th scope="col">Ім`я</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Репутація</th>
-                                    <th scope="col">Вік</th>
-                                    <th scope="col">Дія</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                    <td>Cell</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>  
-                        }
                     </div>
                 </div>
             </div>
@@ -143,9 +97,6 @@
     </form>
 </div>
 <style>
-    th {
-        background: #333333;
-    }
     .form-group, h2, h5, h6 {
         font-family: 'Bluu Next Cyrillic';
         color: #333333;
