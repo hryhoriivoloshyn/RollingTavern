@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles="user")]
     public partial class EditProfileModel : PageModel
     {
         private readonly IWebHostEnvironment _appEnvironment;

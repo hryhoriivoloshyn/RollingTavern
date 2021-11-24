@@ -16,6 +16,7 @@ using Rolling_Tavern.Models;
 namespace Rolling_Tavern.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
