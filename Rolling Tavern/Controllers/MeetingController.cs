@@ -64,6 +64,7 @@ namespace Rolling_Tavern.Controllers
             return profilePicturePath;
         }
 
+
         private async Task<List<Meeting>> GetMeetings()
         {
             List<Meeting> Meetings = new List<Meeting>();
@@ -148,7 +149,7 @@ namespace Rolling_Tavern.Controllers
 
         // GET: Meeting/Create
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "user")]
         public IActionResult Create()
         {
             ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName");
@@ -160,6 +161,7 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> Create([Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
         {
             if (ModelState.IsValid)
@@ -189,6 +191,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: Meeting/Edit/5
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -235,7 +238,9 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> Edit(int id, [Bind("MeetingId,MeetingName,DateOfMeeting,AddresOfMeeting,Description,AdditionalRequirements,PhotoLink,CreatorId,GameId,MinimalAge")] Meeting meeting, IFormFile meetingPicture)
+
         {
 /*            if (id != meeting.MeetingId)
             {
@@ -293,6 +298,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: Meeting/Delete/5
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -328,6 +334,7 @@ namespace Rolling_Tavern.Controllers
 
         // POST: Meeting/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "user")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

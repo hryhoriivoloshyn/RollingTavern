@@ -16,9 +16,13 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="Index" style="margin-left:50px">Зустрічі</a>
                 </li>
-                <li class="nav-item dropdown" style="background:#B82406;border-radius:5px;margin-left:50px;">
-                    <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="Create">Створити зустріч</a>
-                </li>
+                @if (User.IsInRole("user"))
+                {
+                    <li class="nav-item dropdown" style="background:#B82406;border-radius:5px;margin-left:50px;">
+                        <a class="nav-link text-white" asp-area="" asp-controller="Meeting" asp-action="Create">Створити зустріч</a>
+                    </li>
+                }
+               
 
             </ul>
         </div>
