@@ -6,7 +6,8 @@
 @{
     bool check = false;
     Request request = new Request();
-    if (Model.CurrentMeeting.Requests.Any()==true && Model.CurrentMeeting.CreatorId!=Model.CurrentUser.Id)
+    List<Request> requests = Model.CurrentMeeting.Requests.Where(i => i.UserId == Model.CurrentUser.Id).ToList();
+    if (requests.Any()==true && Model.CurrentMeeting.CreatorId!=Model.CurrentUser.Id && !Model.Role)
     {
         request = Model.CurrentMeeting.Requests.Where(r => r.UserId == Model.CurrentUser.Id).First();
         if (request != null)
@@ -54,15 +55,15 @@
                             <img src="@Model.CurrentMeeting.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px" /><h5 style="margin-left:25px;">@Model.CurrentMeeting.Creator.FirstName</h5>
                             <div style="text-align:center">
                                 <label>
-                                    @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                                    @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id || Model.Role)
                                     {
-                                        if (Model.CurrentUser.PhoneNumber == null)
+                                        if (Model.CurrentMeeting.Creator.PhoneNumber == null)
                                         {
                                             <label>Номера телефону немає.</label>
                                         }
                                         else
                                         {
-                                            <label>@Model.CurrentUser.PhoneNumber</label>
+                                            <label>@Model.CurrentMeeting.Creator.PhoneNumber</label>
                                         }
                                     }
                                     else if (check && request.StateId == 1)
@@ -74,13 +75,13 @@
                                     }
                                     else if (check && request.StateId == 2)
                                     {
-                                        if (Model.CurrentUser.PhoneNumber == null)
+                                        if (Model.CurrentMeeting.Creator.PhoneNumber == null)
                                         {
                                             <label>Номера телефону немає.</label>
                                         }
                                         else
                                         {
-                                            <label>@Model.CurrentUser.PhoneNumber</label>
+                                            <label>@Model.CurrentMeeting.Creator.PhoneNumber</label>
                                         }
                                     }
                                     else if (check && request.StateId == 3)
@@ -134,8 +135,11 @@
                         }
                     </div>
                     <div class="form-group">
-
-                        @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                        @if(Model.Role)
+                        {
+                        <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
+                        }
+                        else if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
                         {
                             <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
                             <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; margin-top: 15px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="ShowRequests" asp-route-id="@Model.CurrentMeeting.MeetingId">Переглянути заявки</a>

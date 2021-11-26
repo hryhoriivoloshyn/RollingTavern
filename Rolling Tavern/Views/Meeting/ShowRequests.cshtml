@@ -53,7 +53,7 @@
                         <h6>500</h6>
                     </td>
                     <td>
-                        <a type="button" asp-route="Index" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;">Профіль</a>
+                        <a type="button" asp-action="ShowProfile" asp-route-id="@item.User.Id" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;">Профіль</a>
                     </td>
                     <td>
                         <img src="@item.State.StateImage" style="height: 40px; width: 40px;" />
@@ -63,13 +63,12 @@
                             <input type="hidden" name="userId" value="@item.User.Id" />
                             @if (item.StateId == 2)
                             {
-                                <input type="submit" value="Видалити" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
-                                <input type="hidden" name="response" value="delete" />
+                                <input type="submit" name="response" value="Видалити" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
                             }
                             @if (item.StateId == 1)
                             {
-                                <input type="submit" value="Додати" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
-                                <input type="hidden" name="response" value="add" />
+                                <input type="submit" name="response" value="Додати" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
+                                <input type="submit" name="response" value="Відмовити" style="background: #B82406; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
                             }
                         </form>
                     </td>

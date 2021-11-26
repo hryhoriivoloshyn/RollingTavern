@@ -34,11 +34,23 @@ namespace Rolling_Tavern.Controllers
         {
             public ApplicationUser CurrentUser;
             public Meeting CurrentMeeting;
+            public bool Role { get; set; }
             public CurrentInfo() {}
             public CurrentInfo(ApplicationUser user ,Meeting meeting)
             {
                 CurrentUser = user;
                 CurrentMeeting = meeting;
+            }
+        }
+        public class UserInfo
+        {
+            public ApplicationUser User;
+            public List<Meeting> Meetings;
+            public UserInfo() {}
+            public UserInfo(ApplicationUser user, List<Meeting> meetings)
+            {
+                User = user;
+                Meetings = meetings;
             }
         }
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
@@ -114,6 +126,7 @@ namespace Rolling_Tavern.Controllers
             else
             {
                 ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+                bool role = await _userManager.IsInRoleAsync(currentUser, "admin");
                 var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
                 BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
@@ -143,6 +156,7 @@ namespace Rolling_Tavern.Controllers
                     CurrentUser = currentUser,
                     CurrentMeeting = meeting
                 };
+                info.Role = role;
                 return View(info);
             }
         }
@@ -316,7 +330,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: Meeting/Delete/5
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "user,admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -352,15 +366,18 @@ namespace Rolling_Tavern.Controllers
 
         // POST: Meeting/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "user,admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var meeting = await _context.Meetings.FindAsync(id);
-            List<Request> requests = await _context.Requests.Where(i => i.MeetingId == meeting.MeetingId).ToListAsync();
-            foreach(var item in requests)
+            if(_context.Requests.Where(i => i.MeetingId == meeting.MeetingId).Any())
             {
-                _context.Requests.Remove(item);
+                List<Request> requests = await _context.Requests.Where(i => i.MeetingId == meeting.MeetingId).ToListAsync();
+                foreach (var item in requests)
+                {
+                    _context.Requests.Remove(item);
+                }
             }
             _context.Meetings.Remove(meeting);
             await _context.SaveChangesAsync();
@@ -395,14 +412,21 @@ namespace Rolling_Tavern.Controllers
         [Authorize(Roles = "user")]
         public async Task<IActionResult> ShowRequests(int id, int userId, string response)
         {
-            if(response=="add")
+            if(response=="Додати")
             {
                 Request request = await _context.Requests.Where(i => i.MeetingId == id && i.UserId == userId).FirstOrDefaultAsync();
                 request.StateId = 2;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ShowRequests));
             }
-            else if(response=="delete")
+            else if(response=="Видалити")
+            {
+                Request request = await _context.Requests.Where(i => i.MeetingId == id && i.UserId == userId).FirstOrDefaultAsync();
+                request.StateId = 3;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ShowRequests));
+            }
+            else if(response=="Відмовити")
             {
                 Request request = await _context.Requests.Where(i => i.MeetingId == id && i.UserId == userId).FirstOrDefaultAsync();
                 request.StateId = 3;
@@ -410,6 +434,106 @@ namespace Rolling_Tavern.Controllers
                 return RedirectToAction(nameof(ShowRequests));
             }
             return RedirectToAction(nameof(Details));
+        }
+
+        private async Task<List<Meeting>> GetMeetingCreatorAsync(ApplicationUser user)
+        {
+            long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
+            List<Meeting> data = new List<Meeting>();
+            List<Meeting> tempData = await _context.Meetings.Where(m => m.CreatorId == userId).ToListAsync();
+            if (tempData?.Any() == true)
+            {
+                foreach (var item in tempData)
+                {
+                    BoardGame game = _context.BoardGames.Where(m => m.GameId == item.GameId).First();
+                    List<Request> requests = await _context.Requests.Where(r => r.MeetingId == item.MeetingId).ToListAsync();
+                    data.Add(new Meeting()
+                    {
+                        MeetingId = item.MeetingId,
+                        MeetingName = item.MeetingName,
+                        DateOfMeeting = item.DateOfMeeting,
+                        AddresOfMeeting = item.AddresOfMeeting,
+                        Description = item.Description,
+                        AdditionalRequirements = item.AdditionalRequirements,
+                        PhotoLink = item.PhotoLink,
+                        Creator = user,
+                        CreatorId = userId,
+                        Game = game,
+                        GameId = item.GameId,
+                        Requests = requests
+                    });
+                }
+            }
+            return data;
+        }
+        private async Task<List<Meeting>> GetMeetingsAsync(ApplicationUser user)
+        {
+            long userId = Convert.ToInt64(await _userManager.GetUserIdAsync(user));
+            var role = await _userManager.GetRolesAsync(user);
+            List<Request> meetingsId = await _context.Requests.Where(r => r.UserId == userId && r.StateId == 2).ToListAsync();
+            List<Meeting> data = new List<Meeting>();
+            if (meetingsId?.Any() == true)
+            {
+                foreach (var i in meetingsId)
+                {
+                    Meeting meeting = _context.Meetings.Where(m => m.MeetingId == i.MeetingId).First();
+                    ApplicationUser Creator = new ApplicationUser();
+                    long? CreatorId = 0;
+                    if (meeting.CreatorId == null)
+                    {
+                        Creator = null;
+                        CreatorId = null;
+                    }
+                    else
+                    {
+                        CreatorId = meeting.CreatorId;
+                        Creator = await _context.Users.Where(u => u.Id == CreatorId).FirstOrDefaultAsync();
+                    }
+                    BoardGame game = _context.BoardGames.Where(m => m.GameId == meeting.GameId).First();
+                    List<Request> requests = await _context.Requests.Where(r => r.MeetingId == meeting.GameId).ToListAsync();
+                    data.Add(new Meeting()
+                    {
+                        MeetingId = meeting.MeetingId,
+                        MeetingName = meeting.MeetingName,
+                        DateOfMeeting = meeting.DateOfMeeting,
+                        AddresOfMeeting = meeting.AddresOfMeeting,
+                        Description = meeting.Description,
+                        AdditionalRequirements = meeting.AdditionalRequirements,
+                        PhotoLink = meeting.PhotoLink,
+                        Creator = Creator,
+                        CreatorId = CreatorId,
+                        MinimalAge = meeting.MinimalAge,
+                        Game = game,
+                        GameId = meeting.GameId,
+                        Requests = requests
+                    });
+                }
+            }
+            return data;
+        }
+
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> ShowProfile(int id)
+        {
+            ApplicationUser tempUser = await _context.Users.Where(i => i.Id == id).FirstOrDefaultAsync();
+            var createdMeetings = await GetMeetingCreatorAsync(tempUser);
+            var appliedMeetings = await GetMeetingsAsync(tempUser);
+            List<Meeting> meetings = new List<Meeting>();
+            foreach (var item in createdMeetings)
+            {
+                meetings.Add(item);
+            }
+            foreach (var item in appliedMeetings)
+            {
+                meetings.Add(item);
+            }
+            meetings.OrderByDescending(d => d.DateOfMeeting);
+            UserInfo data = new()
+            {
+                User = tempUser,
+                Meetings = meetings
+            };
+            return (View(data));
         }
 
         private bool MeetingExists(int id)
