@@ -141,6 +141,10 @@
                             <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; margin-top: 15px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="ShowRequests" asp-route-id="@Model.CurrentMeeting.MeetingId">Переглянути заявки</a>
                             <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
                         }
+                        else if(User.IsInRole("admin"))
+                        {
+                            <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black; text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Delete" asp-route-id="@Model.CurrentMeeting.MeetingId">Видалити зустріч</a>
+                        }
                         else if (check && request.StateId == 1)
                         {
                             <label>Організатор розглядає вашу заявку.</label>
@@ -185,6 +189,7 @@
         <center>
             <div>
                 <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустрічей</a>
+                
             </div>
         </center>
     </div>
