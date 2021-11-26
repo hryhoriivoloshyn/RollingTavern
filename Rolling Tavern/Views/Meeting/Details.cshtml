@@ -92,7 +92,24 @@
                 <div>
                     <a asp-action="Index" style="text-align:right;color:#333333;" class="text-muted">До списку зустрічей</a>
                 </div>
+
             </center>
+
+            @if (User.IsInRole("admin"))
+            {
+                <div class="form-group">
+                    <a class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;">Прийняти участь!</a>
+                </div>
+            }
+
+            @* @if (User.IsInRole("admin"))
+        {
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item dropdown" style="text-align: center; font-family: Bluu Next Cyrillic; font-size:14px; background: #B82406; border-radius: 5px;">
+                    <a class="nav-link text-white" style="font-family: Bluu Next Cyrillic; font-size: 14px;" asp-area="" asp-controller="Meeting" asp-action="Create">Видалити!</a>
+                </li>
+            </ul>
+        }*@
         </div>
     </form>
 </div>
