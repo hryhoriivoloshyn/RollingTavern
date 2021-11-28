@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Rolling_Tavern.Models.ApplicationUser>
+
+
+<div class="page-content">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Ім'я</th>
+            <th>Прізвище</th>
+            <th>Нікнейм</th>
+            <th>Пошта</th>
+            <th>Телефон</th>
+            <th colspan="2">Дія</th>
+
+        </tr>
+        </thead>
+
+
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+                <td><a href="#" class="btn btn-outline-dark" role="button">Детальніше</a></td>
+
+                <td><a href="#" class="btn btn-danger" role="button">Заблокувати</a></td>
+
+
+            </tr>
+
+        }
+    </table>
+    </div>
