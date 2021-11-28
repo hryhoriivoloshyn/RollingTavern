@@ -131,6 +131,10 @@ namespace Rolling_Tavern.Controllers
                 BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
                 List<Request> requests = await _context.Requests.Where(i => i.MeetingId == temp.MeetingId).ToListAsync();
+                foreach(var item in requests)
+                {
+                    item.User = await _context.Users.Where(i => i.Id == item.UserId).FirstAsync();
+                }
                 Meeting meeting = new Meeting
                 {
                     MeetingId = temp.MeetingId,
@@ -337,6 +341,8 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+            bool role = await _userManager.IsInRoleAsync(currentUser, "admin");
             var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
             BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
             ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
@@ -361,7 +367,13 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
-            return View(meeting);
+            CurrentInfo info = new()
+            {
+                CurrentUser = currentUser,
+                CurrentMeeting = meeting
+            };
+            info.Role = role;
+            return View(info);
         }
 
         // POST: Meeting/Delete/5
@@ -528,10 +540,22 @@ namespace Rolling_Tavern.Controllers
                 meetings.Add(item);
             }
             meetings.OrderByDescending(d => d.DateOfMeeting);
+            List<Meeting> meetingsData = new List<Meeting>();
+            int count = 5;
+            foreach(var item in meetings)
+            {
+                if (count <= 0)
+                    break;
+                else
+                {
+                    meetingsData.Add(item);
+                    count--;
+                }
+            }
             UserInfo data = new()
             {
                 User = tempUser,
-                Meetings = meetings
+                Meetings = meetingsData
             };
             return (View(data));
         }

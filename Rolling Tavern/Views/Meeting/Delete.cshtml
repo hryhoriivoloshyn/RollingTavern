@@ -1,4 +1,4 @@
-﻿@model Rolling_Tavern.Models.Meeting
+﻿@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,7 +12,7 @@
     <script src="~/js/map.js"></script>
 
     <div class="page-content" onload="setAddress()">
-        <h2 style="text-align:center">@Model.MeetingName</h2>
+        <h2 style="text-align:center">@Model.CurrentMeeting.MeetingName</h2>
         <hr style="width:60vw" />
         <h3 style="text-align:center">Ви впевнені, що хочете видалити цю зустріч?</h3>
         <form>
@@ -21,19 +21,19 @@
                     <div class="form-row profile-row">
                         <div class="col-md-8">
                             <div class="form-group">
-                                <img src="@Model.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
+                                <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                             </div>
                             <div class="form-group">
-                                <h5>Гра: <u>@Model.Game.GameName</u></h5>
-                                <label>Дата проведення зустрічі: @Model.DateOfMeeting</label>
+                                <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
+                                <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
                             </div>
                             <div class="form-group">
                                 <h5>Опис зустрічі: </h5>
-                                <label>@Model.Description</label>
+                                <label>@Model.CurrentMeeting.Description</label>
                             </div>
                             <div class="form-group">
                                 <h5>Додаткові вимоги до учасників: </h5>
-                                <label>@Model.AdditionalRequirements</label>
+                                <label>@Model.CurrentMeeting.AdditionalRequirements</label>
                             </div>
                         </div>
                     </div>
@@ -44,19 +44,19 @@
                             <div class="form-group">
                                 <h5>Організатор зустрічі: </h5>
                                 <div>
-                                    <img src="@Model.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px" /><h5 style="margin-left:25px;">@Model.Creator.FirstName</h5>
+                                    <img src="@Model.CurrentMeeting.Creator.ProfilePicture" class="round" style="height: 100px; width: 100px" /><h5 style="margin-left:25px;">@Model.CurrentMeeting.Creator.FirstName</h5>
                                     <div style="text-align:center">
                                         <label>
-                                            @Model.Creator.PhoneNumber
+                                            @Model.CurrentMeeting.Creator.PhoneNumber
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @if (Model.Requests.Any() == true)
+                                @if (Model.CurrentMeeting.Requests.Any() == true)
                                 {
                                     <label style="text-align:center;">
-                                        @Model.Requests.Count(i => i.StateId == 2) з @Model.Game.MaxAmountOfPlayers гравців знайдено.
+                                        @Model.CurrentMeeting.Requests.Count(i => i.StateId == 2) з @Model.CurrentMeeting.Game.MaxAmountOfPlayers гравців знайдено.
                                     </label>
                                 }
                                 else
@@ -64,16 +64,19 @@
                                     <label style="text-align:center;">Гравців ще не знайдено.</label>
                                 }
                             </div>
+                            @if (!Model.Role)
+                            {
+                                <div class="form-group">
+                                    <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.CurrentMeeting.MeetingId">Редагувати зустріч</a>
+                                </div>
+                            }
                             <div class="form-group">
-                                <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" asp-action="Edit" asp-route-id="@Model.MeetingId">Редагувати зустріч</a>
-                            </div>
-                            <div class="form-group">
-                                <label>Вікові обмеження: @Model.MinimalAge</label>
+                                <label>Вікові обмеження: @Model.CurrentMeeting.MinimalAge</label>
                             </div>
 
                             <div class="form-group">
                                 <h5>Адреса зустрічі:</h5>
-                                <label id="address">@Model.AddresOfMeeting</label>
+                                <label id="address">@Model.CurrentMeeting.AddresOfMeeting</label>
                             </div>
                             <div class="form-group" id="map"></div>
                         </div>
@@ -83,14 +86,14 @@
         </form>
         <form asp-action="Delete">
             <center>
-                <input type="hidden" asp-for="MeetingId" />
+                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
                 <input type="submit" value="Видалити" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" class="btn btn-primary" /> 
             </center>
         </form>
         <div>
             <center>
                 <div style="margin-top: 10px">
-                    <a asp-action="Details" asp-route-id="@Model.MeetingId" style="text-align: right; color: #333333; " class="text-muted">До зустрічі</a>
+                    <a asp-action="Details" asp-route-id="@Model.CurrentMeeting.MeetingId" style="text-align: right; color: #333333; " class="text-muted">До зустрічі</a>
                 </div>
             </center>
         </div>
