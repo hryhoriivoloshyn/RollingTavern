@@ -10,86 +10,150 @@
             ((now.Month > birthDate.Month || now.Month == birthDate.Month && now.Day >= birthDate.Day) ? 1 : 0);
     }
 }
-<div class="container page-content">
-    <h2 style="text-align:center">Користувач: @Model.User.UserName</h2>
-    <hr style="width:60vw" />
-    <div class="row justify-content-around">
-        <div class="col-4">
-            <div class="form-row profile-row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <img src="@Model.User.ProfilePicture" class="round" style="height: 100px; width: 100px" />
-                    </div>
-                    <div class="form-group">
-                        <label>@Model.User.FirstName</label>
-                        <label>@Model.User.LastName</label>
-                        <label>@Model.User.Email</label>
-                        <label>@Model.User.PhoneNumber</label>
-                        <label>@GetAge((DateTime)Model.User.DateOfBirth)</label>
-                    </div>
-                </div>
+
+<h2 style="text-align:center">Користувач: @Model.User.UserName</h2>
+<hr style="width:60px" />
+<div class="row">
+    <div class="col-md-3">
+        <section class="profile" style="background-color:white;">
+            <div class="form-group">
+                <center>
+                    <img src="@Model.User.ProfilePicture" class="round" style="height: 100px; width: 100px" />
+                </center>
             </div>
-        </div>
-        <div class="col-4">
-            <div class="form-row profile-row">
-                <div class="col-md-8">
-                    <div>
-                        <table cellpadding="10" style="margin-left:auto; margin-right: auto; table-layout:fixed;">
-                            @if (Model.Meetings?.Any() == true)
-                            {
-                                @foreach (var item in Model.Meetings)
-                                {
-                                    <tr>
-                                        <td>
-                                            @if (Model.User.Id == item.CreatorId)
-                                            {
-                                                <img src="~/images/crown.png" style="height: 30px; margin-left: 3%; margin-bottom: 1%; display: inline-block; width: 30px ">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/images/DefaultUser.png" style="height: 30px; margin-left: 3%; margin-bottom: 1%; display: inline-block; width: 30px ">
-                                            }
-                                        </td>
-                                        <td>
-                                            @if (item.PhotoLink != null)
-                                            {
-                                                <img src="@item.PhotoLink" style="height: 30px; margin-left: 1%; margin-bottom: 1%; display: inline-block; width: 30px ">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/BoardGamesPicture/defaultBoardGame.jpg" style="height: 30px; margin-left: 1%; margin-bottom: 1%; display: inline-block; width: 30px ">
-                                            }
-                                        </td>
-                                        <td><h5 style="display: inline-block; margin-left: 1%">@item.MeetingName</h5></td>
-                                        <td><h5 style="display: inline-block; margin-left: 1%">@item.AddresOfMeeting</h5></td>
-                                        <td><h5 style="display: inline-block; margin-left: 1%">@item.DateOfMeeting</h5></td>
-                                        <td><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"></td>
-                                        <td><h5 style="display: inline-block">@item.Requests.Count(i => i.StateId == 2) / @item.Game.MaxAmountOfPlayers</h5></td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td><h5 style="display: inline-block; margin-left: 1%">Немає зустрічей, в яких ви брали участь</h5></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%;">
+                    <center>
+                        <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="firstName">Ім'я: @Model.User.FirstName</a>
+                    </center>
+                    <hr style="margin-top: 3%; margin-bottom: 3%; " />
+                </li>
+                <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%; ">
+                    <center>
+                        <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="lastName">Прізвище: @Model.User.LastName</a>
+                    </center>
+                    <hr style="margin-top: 3%; margin-bottom: 3%; " />
+                </li>
+                <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%; ">
+                    <center>
+                        <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="email">Пошта: @Model.User.Email</a>
+                    </center>
+                    <hr style="margin-top: 3%; margin-bottom: 3%; " />
+                </li>
+                <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%; ">
+                    <center>
+                        <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="phoneNumber">Телефон: @Model.User.PhoneNumber</a>
+                    </center>
+                    <hr style="margin-top: 3%; margin-bottom: 3%; " />
+                </li>
+                <li class="nav-item" style="margin-top: 3%; margin-bottom: 3%; ">
+                    <center>
+                        <a style="margin-top: 3%; margin-bottom: 3%; color: black " id="dateOfBirth">Вік: @GetAge((DateTime)Model.User.DateOfBirth)</a>
+                    </center>
+                    <hr style="margin-top: 3%; margin-bottom: 3%; " />
+                </li>
+
+            </ul>
+            <script>
+                function goToProfile(input) {
+                    window.location.replace(input);
+                };
+            </script>
+
+        </section>
+    </div>
+    <div class="col-md-9">
+
+        <section class="profileLeft" style="background-color:white;">
+            <div>
+                <table cellpadding="10" style="margin-left:auto; margin-right: auto; table-layout:fixed;">
+                    @if (Model.Meetings?.Any() == true)
+                    {
+                        @foreach (var item in Model.Meetings)
+                        {
+                            <tr>
+                                <td>
+                                    @if (Model.User.Id == item.CreatorId)
+                                    {
+                                        <img src="~/images/crown.png" style="height: 30px; margin-left: 3%; margin-bottom: 1%; display: inline-block; width: 30px ">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/DefaultUser.png" style="height: 30px; margin-left: 3%; margin-bottom: 1%; display: inline-block; width: 30px ">
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.PhotoLink != null)
+                                    {
+                                        <img src="@item.PhotoLink" style="height: 30px; margin-left: 1%; margin-bottom: 1%; display: inline-block; width: 30px ">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/BoardGamesPicture/defaultBoardGame.jpg" style="height: 30px; margin-left: 1%; margin-bottom: 1%; display: inline-block; width: 30px ">
+                                    }
+                                </td>
+                                <td><h5 style="display: inline-block; margin-left: 1%">@item.MeetingName</h5></td>
+                                <td><h5 style="display: inline-block; margin-left: 1%">@item.AddresOfMeeting</h5></td>
+                                <td><h5 style="display: inline-block; margin-left: 1%">@item.DateOfMeeting</h5></td>
+                                <td><img src="~/images/DefaultUser.png" style=" margin-bottom: 1%; height: 30px; display: inline-block; margin-left: 1%; width: 30px"></td>
+                                <td><h5 style="display: inline-block">@item.Requests.Count(i => i.StateId == 2) / @item.Game.MaxAmountOfPlayers</h5></td>
+                            </tr>
+                            
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td><h5 style="display: inline-block; margin-left: 1%">Немає зустрічей, в яких ви брали участь</h5></td>
+                        </tr>
+                    }
+                </table>
             </div>
-        </div>
+        </section>
     </div>
 </div>
+
 <style>
     .form-group, h2, h3, h5, h6 {
         font-family: 'Bluu Next Cyrillic';
         color: #333333;
     }
+
     .round {
         height: 50%;
         border-radius: 100px; /* Радиус скругления */
         border: 3px solid black; /* Параметры рамки */
         box-shadow: 0 0 7px #666; /* Параметры тени */
+    }
+    section.profile {
+        color: black;
+        border: 1px solid black;
+        height: auto;
+        margin-left: 15%;
+        border-radius: 10px;
+    }
+
+    hr {
+        margin: 5px 0px 5px 0px;
+    }
+
+    form button:hover {
+        text-decoration: underline
+    }
+    section.profileLeft {
+        color: black;
+        border: 1px solid black;
+        height: fit-content;
+        width: 90%;
+        border-radius: 10px;
+        padding-bottom: 10px;
+    }
+
+    button {
+        background-color: Transparent;
+        border: 1px solid black;
+    }
+    td {
+        white-space: nowrap;
     }
 </style>
