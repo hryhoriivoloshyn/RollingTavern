@@ -126,7 +126,6 @@ namespace Rolling_Tavern.Controllers
             else
             {
                 ApplicationUser currentUser = await _userManager.GetUserAsync(User);
-                bool role = await _userManager.IsInRoleAsync(currentUser, "admin");
                 var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
                 BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
@@ -160,7 +159,6 @@ namespace Rolling_Tavern.Controllers
                     CurrentUser = currentUser,
                     CurrentMeeting = meeting
                 };
-                info.Role = role;
                 return View(info);
             }
         }

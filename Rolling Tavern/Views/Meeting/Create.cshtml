@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label asp-for="PhotoLink">Фото зустрічі: </label>
                             <input type="file" name="meetingPicture" id="fileUpload" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this)" />
-                            <span asp-validation-for="PhotoLink" class="text-danger"></span>
+                            <span asp-validation-for="PhotoLink" id="photo" class="text-danger"></span>
                             <div style="text-align:center">
                                 <img id="meet" src="#" alt="Оберіть фото" style="margin-top:10px;" />
                             </div>
@@ -159,18 +159,40 @@
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            var h = $('#meet').height();
-            var w = $('#meet').width();
             reader.onload = function (e) {
-                $('#meet')
-                    .attr('src', e.target.result)
-                    .width(300)
-                    .height(300);
+                if (checkExt()) {
+                    $('#meet')
+                        .attr('src', e.target.result)
+                        .width(300)
+                        .height(300);
+                    $('#photo').text('');
+                }
+                else {
+                    $('#photo').text('Ви обрали недоступне розширення для файлу. Доступні: .png, .jpg, .jpeg, .gif.');
+                    var file = document.getElementById('fileUpload');
+                    file.value = '';
+                    $('#meet').attr('src', '#');
+                }
             };
 
             reader.readAsDataURL(input.files[0]);
         }
     }
+    function checkExt() {
+        var file = document.getElementById('fileUpload');
+        var ext = file.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                    return true;
+                default:
+                    this.value = '';
+                    return false;
+            }
+    }
+    
 </script>
 
 @section Scripts {
