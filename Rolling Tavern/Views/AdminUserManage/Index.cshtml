@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Rolling_Tavern.Models.ApplicationUser>
+﻿@using System.Linq
+@model IEnumerable<Rolling_Tavern.Models.ApplicationUser>
 
 
 <div class="page-content">
@@ -26,7 +27,13 @@
                 <td>@user.PhoneNumber</td>
                 <td><a href="#" class="btn btn-outline-dark" role="button">Детальніше</a></td>
 
-                <td><a href="#" class="btn btn-danger" role="button">Заблокувати</a></td>
+                <td>
+                    <form asp-action="BanUser" method="post">
+                        <input type="hidden" name="id" value="@user.Id"/>
+                        <input type="submit" class="btn btn-danger" value="Видалити"/>
+                    </form>
+                   
+                </td>
 
 
             </tr>
