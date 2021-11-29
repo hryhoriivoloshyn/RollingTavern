@@ -35,5 +35,33 @@ namespace Rolling_Tavern.Controllers
             
             return View(users);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> BanUser(long id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                var result= await _userManager.SetLockoutEndDateAsync(user,DateTime.Now.AddYears(100));
+                return RedirectToAction("Index");
+
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnbanUser(long id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                var result = await _userManager.SetLockoutEndDateAsync(user, null);
+                return RedirectToAction("Index");
+
+            }
+
+            return NotFound();
+        }
     }
 }

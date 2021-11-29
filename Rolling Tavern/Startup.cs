@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Rolling_Tavern.Middleware;
 using Rolling_Tavern.Models;
 
 namespace Rolling_Tavern
@@ -68,6 +69,8 @@ namespace Rolling_Tavern
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseUserDestroyer();
 
             app.UseEndpoints(endpoints =>
             {
