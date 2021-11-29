@@ -42,7 +42,7 @@ namespace Rolling_Tavern.Controllers
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user != null)
             {
-                var result= await _userManager.SetLockoutEndDateAsync(user,DateTime.Now.AddMinutes(1));
+                var result= await _userManager.SetLockoutEndDateAsync(user,DateTime.Now.AddYears(100));
                 return RedirectToAction("Index");
 
             }
@@ -56,8 +56,8 @@ namespace Rolling_Tavern.Controllers
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user != null)
             {
-                var result = await _userManager.SetLockoutEnabledAsync(user, true);
-                return Ok(result);
+                var result = await _userManager.SetLockoutEndDateAsync(user, null);
+                return RedirectToAction("Index");
 
             }
 

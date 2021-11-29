@@ -25,15 +25,30 @@
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
-                <td><a href="#" class="btn btn-outline-dark" role="button">Детальніше</a></td>
+                
+                <td><a asp-controller="UserProfile" asp-action="Index" asp-route-id="@user.Id" class="btn btn-outline-dark" role="button">Детальніше</a></td>
 
-                <td>
-                    <form asp-action="BanUser" method="post">
-                        <input type="hidden" name="id" value="@user.Id"/>
-                        <input type="submit" class="btn btn-danger" value="Видалити"/>
-                    </form>
+                @if (user.LockoutEnd > DateTimeOffset.Now)
+                {
+                    <td>
+
+                        <form asp-action="UnbanUser" method="post">
+                            <input type="hidden" name="id" value="@user.Id"/>
+                            <input type="submit" class="btn btn-success" value="Разблокувати"/>
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <form asp-action="BanUser" method="post">
+                            <input type="hidden" name="id" value="@user.Id"/>
+                            <input type="submit" class="btn btn-danger" value="Заблокувати"/>
+                        </form>
                    
-                </td>
+                    </td>
+                }
+                
 
 
             </tr>
