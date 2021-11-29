@@ -3,9 +3,11 @@
 
 
 <div class="page-content">
-    <table class="table">
-        <thead class="thead-dark">
+    <h1 class="my-5 text-center">Всі користувачі</h1>
+    <table class="table mx-auto my-4" style="max-width: 95%;">
+        <thead class="text-center text-white" style="background: rgba(28, 0, 19, 1)">
         <tr>
+            <th>Фото профілю</th>
             <th>Ім'я</th>
             <th>Прізвище</th>
             <th>Нікнейм</th>
@@ -20,12 +22,15 @@
         @foreach (var user in Model)
         {
             <tr>
+                <td>
+                    <img src="@user.ProfilePicture" class="mx-auto" style="height: 40px; width: 40px;"/>
+                </td>
                 <td>@user.FirstName</td>
                 <td>@user.LastName</td>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
-                
+
                 <td><a asp-controller="UserProfile" asp-action="Index" asp-route-id="@user.Id" class="btn btn-outline-dark" role="button">Детальніше</a></td>
 
                 @if (user.LockoutEnd > DateTimeOffset.Now)
@@ -45,14 +50,14 @@
                             <input type="hidden" name="id" value="@user.Id"/>
                             <input type="submit" class="btn btn-danger" value="Заблокувати"/>
                         </form>
-                   
+
                     </td>
                 }
-                
+
 
 
             </tr>
 
         }
     </table>
-    </div>
+</div>
