@@ -36,44 +36,44 @@
                 </tr>
                 @foreach (var item in Model.Requests)
                 {
-            <tr>
-                <td>
-                    <img src="@item.User.ProfilePicture" style="height: 40px; width: 40px;" />
-                </td>
-                <td>
-                    <h6>@item.User.Email</h6>
-                </td>
-                <td>
-                    <h6>@item.User.UserName</h6>
-                </td>
-                <td>
-                    <h6>@item.User.PhoneNumber</h6>
-                </td>
-                <td>
-                    <h6>500</h6>
-                </td>
-                <td>
-                    <a type="button" asp-controller="UserProfile" asp-action="Index" asp-route-id="@item.User.Id" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;">Профіль</a>
-                </td>
-                <td>
-                    <img src="@item.State.StateImage" style="height: 40px; width: 40px;" />
-                </td>
-                <td>
-                    <form asp-action="ShowRequests" method="post">
-                        <input type="hidden" name="userId" value="@item.User.Id" />
-                        @if (item.StateId == 2)
-                        {
-                            <input type="submit" name="response" value="Видалити" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
-                        }
-                        @if (item.StateId == 1)
-                        {
-                            <input type="submit" name="response" value="Додати" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
-                            <input type="submit" name="response" value="Відмовити" style="background: #B82406; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
-                        }
-                    </form>
-                </td>
-            </tr>
-                 
+                    <tr>
+                        <td>
+                            <img src="@item.User.ProfilePicture" style="height: 40px; width: 40px;" />
+                        </td>
+                        <td>
+                            <h6>@item.User.Email</h6>
+                        </td>
+                        <td>
+                            <h6>@item.User.UserName</h6>
+                        </td>
+                        <td>
+                            <h6>@item.User.PhoneNumber</h6>
+                        </td>
+                        <td>
+                            <h6>500</h6>
+                        </td>
+                        <td>
+                            <a type="button" asp-controller="UserProfile" asp-action="Index" asp-route-id="@item.User.Id" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;">Профіль</a>
+                        </td>
+                        <td>
+                            <img src="@item.State.StateImage" style="height: 40px; width: 40px;" />
+                        </td>
+                        <td>
+                            <form asp-action="ShowRequests" method="post">
+                                <input type="hidden" name="userId" value="@item.User.Id" />
+                                @if (item.StateId == 2)
+                                {
+                                    <input type="submit" name="response" value="Видалити" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
+                                }
+                                @if (item.StateId == 1)
+                                {
+                                    <input type="submit" name="response" value="Додати" style="background: none; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
+                                    <input type="submit" name="response" value="Відмовити" style="background: #B82406; font-family: Bluu Next Cyrillic; font-size: 15px; border-radius: 5px; color: black;" />
+                                }
+                            </form>
+                        </td>
+                    </tr>
+
                 }
             </table>
         }
@@ -81,7 +81,16 @@
         {
             <h2 style="text-align:center;">Ще немає бажаючих приєднатися до зустрічі.</h2>
         }
+        <center>
+            <div class="form-group">
+                <a href="/Meeting/Details/@Model.MeetingId" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px;position:center" class="btn btn-primary">
+                    Повернутися
+                </a>
+            </div>
+        </center>
+        
     </section>
+   
 </div>
 <style>
     .form-group, h2, h3, h5, h6 {
