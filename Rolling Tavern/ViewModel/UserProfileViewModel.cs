@@ -11,5 +11,6 @@ namespace Rolling_Tavern.ViewModel
     {
         public ApplicationUser User { get; set; }
         public IEnumerable<Meeting> StoryOfMeetings { get; set; }
+        public int? MeetingID { get; set; }
     }
 }
