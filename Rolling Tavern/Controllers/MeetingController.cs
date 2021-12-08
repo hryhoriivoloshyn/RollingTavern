@@ -77,7 +77,7 @@ namespace Rolling_Tavern.Controllers
         }
 
 
-        private async Task<List<Meeting>> GetMeetings()
+        private async Task<IEnumerable<Meeting>> GetMeetings()
         {
             List<Meeting> Meetings = new List<Meeting>();
             var allMeetings = await _context.Meetings.Where(d => d.DateOfMeeting > DateTime.Now && d.Creator != null).ToListAsync();
@@ -110,10 +110,52 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: Meeting
-        public async Task<ViewResult> Index()
+        //public async Task<ViewResult> Index()
+        //{
+        //    var data = await GetMeetings();
+        //    return View(data);
+        //}
+
+
+        public async Task<ViewResult> Index(string sortOrder, string searchString)
         {
-            var data = await GetMeetings();
-            return View(data);
+            var meetings = await GetMeetings();
+          
+                ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            var games = await _context.BoardGames.ToListAsync();
+            var users = await _context.Users.ToListAsync();
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                searchString = searchString.ToLower();
+                meetings = meetings.Where(s => s.MeetingName.ToLower().Contains(searchString)
+                                               || s.AddresOfMeeting.ToLower().Contains(searchString)
+                                               || s.Game.GameName.ToLower().Contains(searchString)
+                                               || s.Game.Genre.ToLower().Contains(searchString)
+                                               || s.Creator.UserName.ToLower().Contains(searchString)
+                                               || s.Creator.FirstName.ToLower().Contains(searchString)
+                                               || s.Creator.LastName.ToLower().Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    meetings = meetings.OrderByDescending(s => s.MeetingName);
+                    break;
+                case "Date":
+                    meetings = meetings.OrderBy(s => s.DateOfMeeting);
+                    break;
+                case "date_desc":
+                    meetings = meetings.OrderByDescending(s => s.DateOfMeeting);
+                    break;
+                default:
+                    meetings = meetings.OrderBy(s => s.MeetingName);
+                    break;
+            }
+            return View(meetings);
         }
 
         // GET: Meeting/Details/5
