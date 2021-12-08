@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +16,33 @@ namespace Rolling_Tavern.Controllers
     public class BoardGamesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment _appEnvironment;
 
-        public BoardGamesController(ApplicationDbContext context)
+        public BoardGamesController(ApplicationDbContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
+        }
+
+        private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game)
+        {
+            const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
+            if (gamePicture == null)
+            {
+                return defaultPicturePath;
+            }
+            string format = "Mddyyyyhhmmsstt";
+            string imagename = String.Format("{0}", DateTime.Now.ToString(format));
+            string pictureType = gamePicture.ContentType;
+            string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
+            string gamePicturePath = "/GamePictures/" + game.GameName[0] + imagename + "." + pictureExtension;
+
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + gamePicturePath, FileMode.Create))
+            {
+                await gamePicture.CopyToAsync(fileStream);
+            }
+
+            return gamePicturePath;
         }
 
         public async Task<List<BoardGame>> GetBoardGamesAsync()
