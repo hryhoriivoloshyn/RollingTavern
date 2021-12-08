@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="GameName" class="control-label"></label>
@@ -21,6 +21,38 @@
                 <label asp-for="Genre" class="control-label"></label>
                 <input asp-for="Genre" class="form-control" />
                 <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Фото гри: </label>
+                <input type="file" name="gamePicture1" id="fileUpload1" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 1)" />
+                <span id="photo1" class="text-danger"></span>
+                <div style="text-align:center">
+                    <img id="game1" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Фото гри: </label>
+                <input type="file" name="gamePicture2" id="fileUpload2" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 2)" />
+                <span id="photo2" class="text-danger"></span>
+                <div style="text-align:center">
+                    <img id="game2" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Фото гри: </label>
+                <input type="file" name="gamePicture3" id="fileUpload3" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 3)" />
+                <span id="photo3" class="text-danger"></span>
+                <div style="text-align:center">
+                    <img id="game3" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Фото гри: </label>
+                <input type="file" name="gamePicture4" id="fileUpload4" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 4)" />
+                <span id="photo4" class="text-danger"></span>
+                <div style="text-align:center">
+                    <img id="game4" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -62,6 +94,51 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script>
+    function readURL(input, order) {
+        if (input.files && input.files[0]) {
+            var num = order;
+            var reader = new FileReader();
+            var spanId = '#photo' + num;
+            var imgId = '#game' + num;
+            var inputId = 'fileUpload' + num;
+            reader.onload = function (e) {
+                if (checkExt(inputId)) {
+                    $(imgId)
+                        .attr('src', e.target.result)
+                        .width(300)
+                        .height(300);
+                    $(spanId).text('');
+                }
+                else {
+                    $(spanId).text('Ви обрали недоступне розширення для файлу. Доступні: .png, .jpg, .jpeg, .gif.');
+                    var file = document.getElementById(inputId);
+                    file.value = '';
+                    $(imgId).attr('src', '#');
+                }
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    function checkExt(inputId) {
+        var file = document.getElementById(inputId);
+        var ext = file.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                    return true;
+                default:
+                    this.value = '';
+                    return false;
+            }
+    }
+
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
