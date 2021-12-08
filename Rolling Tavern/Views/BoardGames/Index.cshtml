@@ -4,74 +4,61 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container page-content">
+    <div class="row justify-content-md-center" style="margin-left:auto; margin-right:auto;">
+        @if (Model?.Any() == true)
+        {
+            @foreach (var boardGame in Model)
+            {
+                <a href="/BoardGames/Details/@boardGame.GameId">
+                    <div class="col-sm-4">
+                        <div class="card" style="margin-bottom: 30px; margin-left: 20px; width: 275px; height: 380px; border-radius: 10px; box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);">
+                            <div style="margin-left:auto; margin-right:auto; margin-top: 5px;">
+                                @if (boardGame.Images != null)
+                                {
+                                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach (var photo in boardGame.Images)
+                                            {
+                                                <div class="carousel-item active">
+                                                    <img src="photo" class="d-block w-100">
+                                                </div>
+                                            }
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                    
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.GameName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinAmountOfPlayers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaxAmountOfPlayers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinGameTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaxGameTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MinAgeOfPlayers)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.GameName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinAmountOfPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxAmountOfPlayers)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinGameTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxGameTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MinAgeOfPlayers)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GameId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                                }
+                                else
+                                {
+                                    <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="max-height: 160px; max-width: 275px">
+                                }
+                            </div>
+                            <div class="card-body" style="text-align:center">
+                                <h5 class="card-title">@boardGame.GameName</h5>
+                                <h6 class="card-text">@boardGame.Genre</h6>
+                                <h6 class="card-text">@boardGame.Description</h6>
+                                <h6 class="card-text">@boardGame.MinAmountOfPlayers</h6>
+                                <h6 class="card-text">@boardGame.MaxAmountOfPlayers</h6>
+                                <h6 class="card-text">@boardGame.MinGameTime</h6>
+                                <h6 class="card-text">@boardGame.MaxGameTime</h6>
+                                <h6 class="card-text">@boardGame.MinAgeOfPlayers</h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</div>
