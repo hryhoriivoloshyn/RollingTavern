@@ -48,6 +48,10 @@ namespace Rolling_Tavern.Controllers
         public async Task<List<BoardGame>> GetBoardGamesAsync()
         {
             List<BoardGame> tempData = await _context.BoardGames.Where(i=>i.GameId!=1).ToListAsync();
+            foreach(var game in tempData)
+            {
+                game.Images = await _context.GameImages.Where(i => i.GameId == game.GameId).ToListAsync();
+            }
             return tempData;
         }
 
