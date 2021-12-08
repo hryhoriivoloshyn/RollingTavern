@@ -24,7 +24,7 @@ namespace Rolling_Tavern.Controllers
             _appEnvironment = appEnvironment;
         }
 
-        private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game)
+        private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game, string order)
         {
             const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
             if (gamePicture == null)
@@ -35,7 +35,7 @@ namespace Rolling_Tavern.Controllers
             string imagename = String.Format("{0}", DateTime.Now.ToString(format));
             string pictureType = gamePicture.ContentType;
             string pictureExtension = pictureType.Substring(pictureType.IndexOf("/") + 1);
-            string gamePicturePath = "/GamePictures/" + game.GameName[0] + imagename + "." + pictureExtension;
+            string gamePicturePath = "/GamePictures/" + game.GameName[0] + order + imagename + "." + pictureExtension;
 
             using (var fileStream = new FileStream(_appEnvironment.WebRootPath + gamePicturePath, FileMode.Create))
             {
@@ -87,11 +87,66 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameName,Genre,Description,MinAmountOfPlayers,MaxAmountOfPlayers,MinGameTime,MaxGameTime,MinAgeOfPlayers")] BoardGame boardGame)
+        public async Task<IActionResult> Create([Bind("GameId,GameName,Genre,Description,MinAmountOfPlayers,MaxAmountOfPlayers,MinGameTime,MaxGameTime,MinAgeOfPlayers")] BoardGame boardGame, 
+            IFormFile gamePicture1, IFormFile gamePicture2, IFormFile gamePicture3, IFormFile gamePicture4)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(boardGame);
+                BoardGame newBoardGame = new()
+                {
+                    GameName = boardGame.GameName,
+                    Genre = boardGame.Genre,
+                    Description = boardGame.Description,
+                    MinAmountOfPlayers = boardGame.MinAmountOfPlayers,
+                    MaxAmountOfPlayers = boardGame.MaxAmountOfPlayers,
+                    MinGameTime = boardGame.MinGameTime,
+                    MaxGameTime = boardGame.MaxGameTime,
+                    MinAgeOfPlayers = boardGame.MinAgeOfPlayers
+                };
+                _context.Add(newBoardGame);
+                await _context.SaveChangesAsync();
+                BoardGame createdGame = await _context.BoardGames.OrderBy(i=>i.GameId).LastOrDefaultAsync();
+                string path1 = null;
+                string path2 = null;
+                string path3 = null;
+                string path4 = null;
+                if (gamePicture1!=null)
+                {
+                    path1 = await UploadPicture(gamePicture1, createdGame, "1");
+                    if(gamePicture2!=null)
+                    {
+                        path2 = await UploadPicture(gamePicture2, createdGame, "2");
+                        if(gamePicture3!=null)
+                        {
+                            path3 = await UploadPicture(gamePicture3, createdGame, "3");
+                            if(gamePicture4!=null)
+                            {
+                                path4 = await UploadPicture(gamePicture4, createdGame, "4");
+                            }
+                        }
+                    }
+                    List<string> paths = new List<string>();
+                    paths.Add(path1);
+                    paths.Add(path2);
+                    paths.Add(path3);
+                    paths.Add(path4);
+                    foreach(var path in paths)
+                    {
+                        if(path!=null)
+                        {
+                            GameImage newImage = new()
+                            {
+                                ImagePath = path,
+                                GameId = createdGame.GameId
+                            };
+                            _context.GameImages.Add(newImage);
+                        }
+                    }
+                }
+                else
+                {
+                    path1 = await UploadPicture(gamePicture1, createdGame, "1");
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
