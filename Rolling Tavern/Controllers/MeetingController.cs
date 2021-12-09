@@ -223,6 +223,29 @@ namespace Rolling_Tavern.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> ExitMeeting(int? id, Meeting meeting)
+        {
+             meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+            Request request = new()
+            {
+                MeetingId = meeting.MeetingId,
+                UserId = currentUser.Id,
+                StateId = 1
+            };
+            if (DateTime.Now > meeting.DateOfMeeting.AddDays(-2))
+            {
+                currentUser.Rating -= 200;
+                await _userManager.UpdateAsync(currentUser);
+            }
+            _context.Remove(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Meeting/Create
         [HttpGet]
         [Authorize(Roles = "user")]

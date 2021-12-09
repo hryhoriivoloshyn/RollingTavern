@@ -20,6 +20,9 @@ namespace Rolling_Tavern.Models
         public DateTime? DateOfBirth { get; set; }
 
         [PersonalData]
+        public int? Rating { get; set; }
+
+        [PersonalData]
         public string ProfilePicture
         {
             get
