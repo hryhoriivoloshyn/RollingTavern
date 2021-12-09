@@ -181,7 +181,7 @@
                         {
                             <label>Організатор розглядає вашу заявку.</label>
                             <form asp-action="ExitMeeting" method="post">
-                                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
+                                <input type="hidden" name="meetingId" value="@Model.CurrentMeeting.MeetingId" />
                                 <input type="submit" value="Покинути зустріч" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" />
                             </form>
                         }
@@ -189,13 +189,17 @@
                         {
                             <label>Організатор прийняв вашу заявку.</label>
                             <form asp-action="ExitMeeting" method="post">
-                                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
+                                <input type="hidden" name="meetingId" value="@Model.CurrentMeeting.MeetingId"/>
                                 <input type="submit" value="Покинути зустріч" class="nav-link text-white" style="text-align: center; font-size:20px; font-family: Bluu Next Cyrillic; background: #B82406; border: 0px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;" />
                             </form>
                         }
                         else if (check && request.StateId == 3)
                         {
                             <label>Організатор відхилив вашу заявку.</label>
+                        }
+                        else if(check && request.StateId==4)
+                        {
+                            <label>Ви покинули цю зустріч.</label>
                         }
                         else
                         {

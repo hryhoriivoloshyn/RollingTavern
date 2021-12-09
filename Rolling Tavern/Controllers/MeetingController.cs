@@ -226,14 +226,18 @@ namespace Rolling_Tavern.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
-        public async Task<IActionResult> ExitMeeting(int? id, Meeting meeting)
+        public async Task<IActionResult> ExitMeeting(int? meetingId)
         {
-            meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            Meeting meeting = await _context.Meetings.Where(i => i.MeetingId == meetingId).FirstOrDefaultAsync();
             ApplicationUser currentUser = await _userManager.GetUserAsync(User);
             Request request = await _context.Requests.Where(i => i.MeetingId == meeting.MeetingId && i.UserId == currentUser.Id).FirstOrDefaultAsync();
             if (DateTime.Now > meeting.DateOfMeeting.AddDays(-2))
             {
                 currentUser.Rating -= 200;
+                if(currentUser.Rating<0)
+                {
+                    currentUser.Rating = 0;
+                }
                 await _userManager.UpdateAsync(currentUser);
             }
             request.StateId = 4;
