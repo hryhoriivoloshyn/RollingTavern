@@ -27,21 +27,19 @@ namespace Rolling_Tavern.Controllers
             _userManager = userManager;
             _appEnvironment = appEnvironment;
         }
-
         public class CurrentState
         {
             public CurrentState()
             {
 
             }
-            public CurrentState(List<BoardGame> games, ApplicationUser user)
+            public CurrentState(List<BoardGame> games)
             {
                 Games = games;
-                CurrentUser = user;
             }
             public List<BoardGame> Games { get; set; }
 
-            public ApplicationUser CurrentUser { get; set; }
+            public bool Admin { get; set; }
         }
 
         private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game, string order)
@@ -82,8 +80,8 @@ namespace Rolling_Tavern.Controllers
             var data = await GetBoardGamesAsync();
             CurrentState dataState = new CurrentState();
             dataState.Games = data;
-            dataState.CurrentUser = user;
-            return View(data);
+            dataState.Admin = await _userManager.IsInRoleAsync(user, "admin");
+            return View(dataState);
         }
 
         // GET: BoardGames/Details/5

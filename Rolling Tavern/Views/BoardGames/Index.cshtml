@@ -1,14 +1,18 @@
-﻿@model IEnumerable<Rolling_Tavern.Models.BoardGame>
+﻿@model Rolling_Tavern.Controllers.BoardGamesController.CurrentState
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="container page-content">
+    @if(Model.Admin)
+    {
+    <a class="nav-link text-white" asp-area="" asp-controller="BoardGames" asp-action="Create" style="width: 20%; text-align: center; background: #B82406; border-radius: 5px;">Створити гру</a>
+    }
     <div class="row justify-content-md-center" style="margin-left:auto; margin-right:auto;">
-        @if (Model?.Any() == true)
+        @if (Model.Games?.Any() == true)
         {
-            @foreach (var boardGame in Model)
+            @foreach (var boardGame in Model.Games)
             {
 
                     <div class="col-sm-4">
@@ -106,5 +110,9 @@
 
             }
         }
+            else
+            {
+                <h2>Інших ігор немає.</h2>
+            }
     </div>
 </div>
