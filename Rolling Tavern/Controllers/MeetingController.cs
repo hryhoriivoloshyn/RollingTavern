@@ -228,20 +228,15 @@ namespace Rolling_Tavern.Controllers
         [Authorize(Roles = "user")]
         public async Task<IActionResult> ExitMeeting(int? id, Meeting meeting)
         {
-             meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
+            meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
             ApplicationUser currentUser = await _userManager.GetUserAsync(User);
-            Request request = new()
-            {
-                MeetingId = meeting.MeetingId,
-                UserId = currentUser.Id,
-                StateId = 1
-            };
+            Request request = await _context.Requests.Where(i => i.MeetingId == meeting.MeetingId && i.UserId == currentUser.Id).FirstOrDefaultAsync();
             if (DateTime.Now > meeting.DateOfMeeting.AddDays(-2))
             {
                 currentUser.Rating -= 200;
                 await _userManager.UpdateAsync(currentUser);
             }
-            _context.Remove(request);
+            request.StateId = 4;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
