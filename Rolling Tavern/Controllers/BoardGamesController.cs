@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +18,30 @@ namespace Rolling_Tavern.Controllers
     public class BoardGamesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private IWebHostEnvironment _appEnvironment;
 
-        public BoardGamesController(ApplicationDbContext context, IWebHostEnvironment appEnvironment)
+        public BoardGamesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _userManager = userManager;
             _appEnvironment = appEnvironment;
+        }
+
+        public class CurrentState
+        {
+            public CurrentState()
+            {
+
+            }
+            public CurrentState(List<BoardGame> games, ApplicationUser user)
+            {
+                Games = games;
+                CurrentUser = user;
+            }
+            public List<BoardGame> Games { get; set; }
+
+            public ApplicationUser CurrentUser { get; set; }
         }
 
         private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game, string order)
@@ -47,8 +67,8 @@ namespace Rolling_Tavern.Controllers
 
         public async Task<List<BoardGame>> GetBoardGamesAsync()
         {
-            List<BoardGame> tempData = await _context.BoardGames.Where(i=>i.GameId!=1).ToListAsync();
-            foreach(var game in tempData)
+            List<BoardGame> tempData = await _context.BoardGames.Where(i => i.GameId != 1).ToListAsync();
+            foreach (var game in tempData)
             {
                 game.Images = await _context.GameImages.Where(i => i.GameId == game.GameId).ToListAsync();
             }
@@ -58,7 +78,11 @@ namespace Rolling_Tavern.Controllers
         // GET: BoardGames
         public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
             var data = await GetBoardGamesAsync();
+            CurrentState dataState = new CurrentState();
+            dataState.Games = data;
+            dataState.CurrentUser = user;
             return View(data);
         }
 
@@ -81,6 +105,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: BoardGames/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
