@@ -141,7 +141,11 @@ namespace Rolling_Tavern.Data
                 .Property(e => e.ProfilePicture)
                 .HasMaxLength(450);
 
-            
+            builder.Entity<ApplicationUser>()
+                .Property(e => e.Rating)
+                .HasDefaultValue(1000);
+
+
         }
         
     }
