@@ -11,7 +11,28 @@
     </center>
     <hr />
     <div class="row justify-content-around">
+        <div class="container" style="height:40%;width:40%">
+            @if (Model.Images.Count() != 0)
+            {
+                int count = 0;
+                string[] classes = { "Biggest", "Smallest1", "Smallest2", "Smallest3" };
+                string[] sizes = { "max-height: 480px; max-width: 620px", "max-height: 160px; max-width: 310px", "max-height: 160px; max-width: 310px", "max-height: 160px; max-width: 310px" };
+                foreach (var photo in Model.Images)
+                {
 
+                    <div class="@classes[count]">
+                        <img src="@photo.ImagePath" class="d-block w-100" style="width: 100%;height:100%">
+                    </div>
+                    count++;
+
+                }
+
+            }
+            else
+            {
+                <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="max-height: 160px; max-width: 275px">
+            }
+        </div>
         <div class="col-4" style="margin-left:250px; width:fit-content;">
             <div class="form-row profile-row">
                 <div class="col-md-8">
@@ -49,8 +70,8 @@
                             padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;"
                                asp-action="Edit" asp-route-id="@Model.GameId">Редагувати</a>
                             <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black;
-                                text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" 
-                               asp-action="Delete"  asp-route-id="@Model.GameId">Видалити гру</a>
+                                text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;"
+                               asp-action="Delete" asp-route-id="@Model.GameId">Видалити гру</a>
                         }
                     </div>
                 </div>
@@ -61,3 +82,31 @@
         <a asp-action="Index" class="text-muted">Повернутися до списку ігор</a>
     </div>
 </div>
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-template-areas:
+            "Biggest Biggest Smallest1"
+            "Biggest Biggest Smallest2"
+            "Biggest Biggest Smallest3";
+    }
+
+    .Biggest {
+        grid-area: Biggest;
+    }
+
+    .Smallest1 {
+        grid-area: Smallest1;
+    }
+
+    .Smallest2 {
+        grid-area: Smallest2;
+    }
+
+    .Smallest3 {
+        grid-area: Smallest3;
+    }
+</style>
