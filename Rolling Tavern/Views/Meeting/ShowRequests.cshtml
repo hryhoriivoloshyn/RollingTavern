@@ -1,6 +1,8 @@
-﻿@model Rolling_Tavern.Models.Meeting
+﻿@using Rolling_Tavern.Services
+@model Rolling_Tavern.Models.Meeting
 @{
     ViewData["Title"] = "Requests";
+    
 }
 <div class="container page-content">
     <h2 style="text-align:center">@Model.MeetingName</h2>
@@ -50,7 +52,11 @@
                             <h6>@item.User.PhoneNumber</h6>
                         </td>
                         <td>
-                            <h6>500</h6>
+                            <h6>
+                                <center>
+                                    <img src="@RatingManager.GetRatingImage(item.User.Rating)" alt="" style="height: 35px; width: 35px;">
+                                </center>
+                            </h6>
                         </td>
                         <td>
                             <form asp-controller="UserProfile" asp-action="Index" asp-route-id="@item.User.Id" method="get">
