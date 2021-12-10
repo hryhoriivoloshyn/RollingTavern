@@ -4,96 +4,126 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>BoardGame</h4>
+<center>
+    <h1>Create</h1>
+    <h4>BoardGame</h4>
+</center>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GameName" class="control-label"></label>
-                <input asp-for="GameName" class="form-control" />
-                <span asp-validation-for="GameName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-control" />
-                <span asp-validation-for="Genre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>Фото гри: </label>
-                <input type="file" name="gamePicture1" id="fileUpload1" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 1)" />
-                <span id="photo1" class="text-danger"></span>
-                <div style="text-align:center">
-                    <img id="game1" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+
+<div class="page-content" onload="setAddress()">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="row justify-content-around">
+            <div class="col-4" style="margin-left:250px; width:fit-content;">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="GameName" class="control-label"></label>
+                            <input asp-for="GameName" class="form-control" />
+                            <span asp-validation-for="GameName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Genre" class="control-label"></label>
+                            <input asp-for="Genre" class="form-control" />
+                            <span asp-validation-for="Genre" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MinAgeOfPlayers" class="control-label"></label>
+                            <input asp-for="MinAgeOfPlayers" class="form-control" />
+                            <span asp-validation-for="MinAgeOfPlayers" class="text-danger"></span>
+                        </div>
+
+
+
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Фото гри: </label>
-                <input type="file" name="gamePicture2" id="fileUpload2" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 2)" />
-                <span id="photo2" class="text-danger"></span>
-                <div style="text-align:center">
-                    <img id="game2" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+            <div class="col-4" id="mod" style="right:100px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+                            <label asp-for="MinAmountOfPlayers" class="control-label"></label>
+                            <input asp-for="MinAmountOfPlayers" class="form-control" />
+                            <span asp-validation-for="MinAmountOfPlayers" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxAmountOfPlayers" class="control-label"></label>
+                            <input asp-for="MaxAmountOfPlayers" class="form-control" />
+                            <span asp-validation-for="MaxAmountOfPlayers" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MinGameTime" class="control-label"></label>
+                            <input asp-for="MinGameTime" class="form-control" />
+                            <span asp-validation-for="MinGameTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxGameTime" class="control-label"></label>
+                            <input asp-for="MaxGameTime" class="form-control" />
+                            <span asp-validation-for="MaxGameTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <center>
+            <div style="width:fit-content; display:inline-block">
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture1" id="fileUpload1" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 1)" />
+                    <span id="photo1" class="text-danger"></span>
+                    <div style="text-align:center">
+                        <img id="game1" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture2" id="fileUpload2" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 2)" />
+                    <span id="photo2" class="text-danger"></span>
+                    <div style="text-align:center">
+                        <img id="game2" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Фото гри: </label>
-                <input type="file" name="gamePicture3" id="fileUpload3" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 3)" />
-                <span id="photo3" class="text-danger"></span>
-                <div style="text-align:center">
-                    <img id="game3" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+            <div style="display: inline-block; width:fit-content; ">
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture3" id="fileUpload3" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 3)" />
+                    <span id="photo3" class="text-danger"></span>
+                    <div style="text-align: center;">
+                        <img id="game3" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Фото гри: </label>
-                <input type="file" name="gamePicture4" id="fileUpload4" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 4)" />
-                <span id="photo4" class="text-danger"></span>
-                <div style="text-align:center">
-                    <img id="game4" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture4" id="fileUpload4" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 4)" />
+                    <span id="photo4" class="text-danger"></span>
+                    <div style="text-align: center;">
+                        <img id="game4" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
                 </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinAmountOfPlayers" class="control-label"></label>
-                <input asp-for="MinAmountOfPlayers" class="form-control" />
-                <span asp-validation-for="MinAmountOfPlayers" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxAmountOfPlayers" class="control-label"></label>
-                <input asp-for="MaxAmountOfPlayers" class="form-control" />
-                <span asp-validation-for="MaxAmountOfPlayers" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinGameTime" class="control-label"></label>
-                <input asp-for="MinGameTime" class="form-control" />
-                <span asp-validation-for="MinGameTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxGameTime" class="control-label"></label>
-                <input asp-for="MaxGameTime" class="form-control" />
-                <span asp-validation-for="MaxGameTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MinAgeOfPlayers" class="control-label"></label>
-                <input asp-for="MinAgeOfPlayers" class="form-control" />
-                <span asp-validation-for="MinAgeOfPlayers" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
-    </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </center>
+    </form>
+
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 <script>
     function readURL(input, order) {
@@ -122,20 +152,20 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
-    
+
     function checkExt(inputId) {
         var file = document.getElementById(inputId);
         var ext = file.value.match(/\.([^\.]+)$/)[1];
-            switch (ext) {
-                case 'jpg':
-                case 'jpeg':
-                case 'png':
-                case 'gif':
-                    return true;
-                default:
-                    this.value = '';
-                    return false;
-            }
+        switch (ext) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+                return true;
+            default:
+                this.value = '';
+                return false;
+        }
     }
 
 </script>
