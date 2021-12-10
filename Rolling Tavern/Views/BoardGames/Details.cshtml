@@ -48,16 +48,16 @@
                             <a type="button" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px;
                             padding: 5px; padding-left: 10px; padding-right: 10px; width:70%;"
                                asp-action="Edit" asp-route-id="@Model.GameId">Редагувати</a>
-
+                            <a type="button" style="text-align: center; font-family: Bluu Next Cyrillic; border-radius: 5px; border: 2px; border-style:solid; border-color: black;
+                                text-decoration: 0px; color: black; margin-top: 15px; padding: 3px; padding-left: 10px; padding-right: 10px; width:70%;" 
+                               asp-action="Delete"  asp-route-id="@Model.GameId">Видалити гру</a>
                         }
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     <div class="form-group text-center" style="margin-top:10%">
         <a asp-action="Index" class="text-muted">Повернутися до списку ігор</a>
-        <a asp-action="Delete" asp-route-id="@Model.GameId">Delete</a>
     </div>
 </div>
