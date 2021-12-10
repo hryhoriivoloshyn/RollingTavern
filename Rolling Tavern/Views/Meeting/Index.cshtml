@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Rolling_Tavern.Models.Meeting>
+﻿@using System.Security.Cryptography
+@model IEnumerable<Rolling_Tavern.Models.Meeting>
 @{ 
     ViewData["Title"] = "Meeting";
 } 
@@ -8,21 +9,32 @@
     <form class="my-2" asp-action="Index" method="get">
         <div class="form-row">
             
-            <input class="form-control mr-sm-2 col-6" placeholder="Пошук" type="text" name="SearchString" value="@ViewData["CurrentFilter"]"/>
-            <div class="col-3">
+            <input class="form-control mr-sm-2 col-6" style="margin-left: auto" placeholder="Пошук" type="text" name="SearchString" value="@ViewData["CurrentFilter"]"/>
+            
+            <div class="form-group">
+
+                <select id="sortOrder" class="form-control" name="sortOrder">
+
+                    <option value="@ViewData["NameSortParm"]">Cортувати за назвою</option>
+                    <option value="@ViewData["DateSortParm"]">Сортувати за датою</option>
+                </select>
+            </div>
+           
+
+            <div class="col-3" >
                 <input type="submit" value="Знайти" class="btn btn-dark"/> |
                 <a asp-action="Index">Всі зустрічі</a>
             </div>
-            <div class="dropdown show col-2">
+            <!--<div class="dropdown show col-2">
                 <a class="btn btn-dark dropdown-toggle ml-auto" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Сортувати
-                </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                </a>-->
+                @*<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Cортувати за назвою</a>
                     <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Сортувати за датою</a>
-                </div>
+                </div>*@
     
-            </div>
+            <!--</div>-->
         </div>
     </form>
     
@@ -77,6 +89,10 @@
                     </div>
                 </a>
             }
+        }
+        else
+        {
+            <h3>Нажаль за вашим запитом зустрічей не знайдено.</h3>
         }
     </div>
 </div>
