@@ -55,7 +55,9 @@ namespace Rolling_Tavern.Controllers
         }
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
-            const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
+            var game = await _context.BoardGames.Where(i => i.GameId == meeting.GameId).FirstOrDefaultAsync();
+            var picrutures = await _context.GameImages.Where(i => i.GameId == meeting.GameId).ToListAsync();
+            string defaultPicturePath = picrutures.First().ImagePath;
             if (profilePicture == null)
             {
                 return defaultPicturePath;

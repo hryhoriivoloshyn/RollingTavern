@@ -119,6 +119,10 @@ namespace Rolling_Tavern.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(boardGame.MinAgeOfPlayers==null)
+                {
+                    boardGame.MinAgeOfPlayers = 6;
+                }
                 BoardGame newBoardGame = new()
                 {
                     GameName = boardGame.GameName,
@@ -137,43 +141,48 @@ namespace Rolling_Tavern.Controllers
                 string path2 = null;
                 string path3 = null;
                 string path4 = null;
-                if (gamePicture1!=null)
+                int counter = 0;
+                if (gamePicture1 != null)
                 {
                     path1 = await UploadPicture(gamePicture1, createdGame, "1");
-                    if(gamePicture2!=null)
-                    {
-                        path2 = await UploadPicture(gamePicture2, createdGame, "2");
-                        if(gamePicture3!=null)
-                        {
-                            path3 = await UploadPicture(gamePicture3, createdGame, "3");
-                            if(gamePicture4!=null)
-                            {
-                                path4 = await UploadPicture(gamePicture4, createdGame, "4");
-                            }
-                        }
-                    }
-                    List<string> paths = new List<string>();
-                    paths.Add(path1);
-                    paths.Add(path2);
-                    paths.Add(path3);
-                    paths.Add(path4);
-                    foreach(var path in paths)
-                    {
-                        if(path!=null)
-                        {
-                            GameImage newImage = new()
-                            {
-                                ImagePath = path,
-                                GameId = createdGame.GameId
-                            };
-                            _context.GameImages.Add(newImage);
-                        }
-                    }
+                    counter++;
                 }
-                else
+                if (gamePicture2 != null)
+                {
+                    path2 = await UploadPicture(gamePicture2, createdGame, "2");
+                    counter++;
+                }
+                if (gamePicture3 != null)
+                {
+                    path3 = await UploadPicture(gamePicture3, createdGame, "3");
+                    counter++;
+                }
+                if (gamePicture4 != null)
+                {
+                    path4 = await UploadPicture(gamePicture4, createdGame, "4");
+                    counter++;
+                }
+                if (counter==0)
                 {
                     path1 = await UploadPicture(gamePicture1, createdGame, "1");
                 }
+                List<string> paths = new List<string>();
+                paths.Add(path1);
+                paths.Add(path2);
+                paths.Add(path3);
+                paths.Add(path4);
+                foreach (var path in paths)
+                {
+                    if (path != null)
+                    {
+                        GameImage newImage = new()
+                        {
+                            ImagePath = path,
+                            GameId = createdGame.GameId
+                        };
+                        _context.GameImages.Add(newImage);
+                    }
+                } 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -255,6 +264,18 @@ namespace Rolling_Tavern.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var boardGame = await _context.BoardGames.FindAsync(id);
+            List<GameImage> images = await _context.GameImages.Where(i => i.GameId == id).ToListAsync();
+            foreach(var image in images)
+            {
+                _context.GameImages.Remove(image);
+                await _context.SaveChangesAsync();
+            }
+            List<Meeting> meetings = await _context.Meetings.Where(i => i.GameId == id).ToListAsync();
+            foreach(var meeting in meetings)
+            {
+                meeting.GameId = 1;
+                await _context.SaveChangesAsync();
+            }
             _context.BoardGames.Remove(boardGame);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
