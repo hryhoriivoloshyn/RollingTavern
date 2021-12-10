@@ -209,7 +209,7 @@ namespace Rolling_Tavern.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "user")]
         public async Task<IActionResult> Details(int? id, Meeting meeting)
-        ||{
+        {
             meeting = await _context.Meetings.Where(i => i.MeetingId == id).FirstOrDefaultAsync();
             ApplicationUser currentUser = await _userManager.GetUserAsync(User);
             Request request = new()
