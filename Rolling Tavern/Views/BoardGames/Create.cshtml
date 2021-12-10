@@ -50,13 +50,13 @@
 
                         <div class="form-group">
                             <label asp-for="MinAmountOfPlayers" class="control-label"></label>
-                            <input asp-for="MinAmountOfPlayers" class="form-control" />
-                            <span asp-validation-for="MinAmountOfPlayers" class="text-danger"></span>
+                            <input asp-for="MinAmountOfPlayers" id="minA" class="form-control"/>
+                            <span asp-validation-for="MinAmountOfPlayers" id="errorMinA" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="MaxAmountOfPlayers" class="control-label"></label>
-                            <input asp-for="MaxAmountOfPlayers" class="form-control" />
-                            <span asp-validation-for="MaxAmountOfPlayers" class="text-danger"></span>
+                            <input asp-for="MaxAmountOfPlayers" id="maxA" class="form-control"/>
+                            <span asp-validation-for="MaxAmountOfPlayers" id="errorMaxA" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="MinGameTime" class="control-label"></label>
@@ -126,6 +126,33 @@
 
 
 <script>
+    var minInput = document.getElementById("minA");
+    var maxInput = document.getElementById("maxA");
+    minInput.onchange = function (e) {
+        var min = document.getElementById("minA").value;
+        var max = document.getElementById("maxA").value;
+        console.log(min);
+        console.log(max);
+        if (Number.isInteger(parseInt(min)) && Number.isInteger(parseInt(max))) {
+            console.log("entered1")
+            if (parseInt(max) < parseInt(min)) {
+                console.log("entered2");
+                document.getElementById("errorMinA").innerHTML = "some text";
+            }
+        }
+    };
+    maxInput.onchange = function (e) {
+        var min = document.getElementById("minA").value;
+        var max = document.getElementById("maxA").value;
+        if (Number.isInteger(parseInt(min)) && Number.isInteger(parseInt(max))) {
+            console.log("entered3")
+            if (parseInt(max) < parseInt(min)) {
+                console.log("entered4");
+                $('#errorMaxA').text("Check False");
+            }
+        }
+    }
+
     function readURL(input, order) {
         if (input.files && input.files[0]) {
             var num = order;
