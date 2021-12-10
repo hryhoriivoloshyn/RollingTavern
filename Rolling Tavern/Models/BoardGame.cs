@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rolling_Tavern.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -38,6 +39,7 @@ namespace Rolling_Tavern.Models
         [Required(ErrorMessage = "Поле {0} є обов'язковим.")]
         [Display(Name = "Максимальна кількість гравців")]
         [RegularExpression("0?[123456789][0]?", ErrorMessage = "Введіть обмеження по гравцям від 1 до 10")]
+        [GreaterThan(nameof(MinAmountOfPlayers))]
         public int MaxAmountOfPlayers { get; set; }
 
         [Required(ErrorMessage = "Поле {0} є обов'язковим.")]
