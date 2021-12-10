@@ -10,31 +10,48 @@
         {
             @foreach (var boardGame in Model)
             {
-                <a href="/BoardGames/Details/@boardGame.GameId">
+               
                     <div class="col-sm-4">
-                        <div class="card" style="margin-bottom: 30px; margin-left: 20px; width: 275px; height: 380px; border-radius: 10px; box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);">
-                            <div style="margin-left:auto; margin-right:auto; margin-top: 5px;">
-                                @if (boardGame.Images != null)
+                        <div class="card" style="margin-bottom: 30px; margin-left: 20px; width: 275px; height: 440px; border-radius: 10px; box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);">
+                            <div style="margin-left:auto; margin-right:auto;">
+                                @if (boardGame.Images.Count() != 0)
                                 {
                                     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-inner">
-                                            @foreach (var photo in boardGame.Images)
+
+                                            @for (int i = 0, j = 0; i < 1; i++)
                                             {
-                                                <div class="carousel-item active">
-                                                    <img src="photo" class="d-block w-100">
-                                                </div>
+                                                @foreach (var photo in boardGame.Images)
+                                                {
+                                                    
+                                                    @if (j == 0)
+                                                    {
+                                                        <div class="carousel-item active">
+                                                            <img src="@photo.ImagePath" class="d-block w-100">
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="carousel-item">
+                                                            <img src="@photo.ImagePath" class="d-block w-100">
+                                                        </div>
+                                                    }
+                                                    j++;
+                                                }
+                                                
+
                                             }
                                         </div>
                                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
+                                            <span class="visually-hidden"></span>
                                         </button>
                                         <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
+                                            <span class="visually-hidden"></span>
                                         </button>
                                     </div>
-                                    
+
 
                                 }
                                 else
@@ -42,22 +59,24 @@
                                     <img class="card-img-top" src="~/BoardGamesPicture/defaultBoardGame.jpg" style="max-height: 160px; max-width: 275px">
                                 }
                             </div>
-                            <div class="card-body" style="text-align:center">
-                                <h5 class="card-title">@boardGame.GameName</h5>
-                                <h6 class="card-text">@boardGame.Genre</h6>
-                                <h6 class="card-text">@boardGame.Description</h6>
-                                <h6 class="card-text">@boardGame.MinAmountOfPlayers</h6>
-                                <h6 class="card-text">@boardGame.MaxAmountOfPlayers</h6>
-                                <h6 class="card-text">@boardGame.MinGameTime</h6>
-                                <h6 class="card-text">@boardGame.MaxGameTime</h6>
-                                <h6 class="card-text">@boardGame.MinAgeOfPlayers</h6>
+                            <a href="/BoardGames/Details/@boardGame.GameId">
+                                <div class="card-body" style="text-align:center">
+                                    <h5 class="card-title">@boardGame.GameName</h5>
+                                    <h6 class="card-text">@boardGame.Genre</h6>
+                                    <h6 class="card-text">@boardGame.Description</h6>
+                                    <h6 class="card-text">@boardGame.MinAmountOfPlayers</h6>
+                                    <h6 class="card-text">@boardGame.MaxAmountOfPlayers</h6>
+                                    <h6 class="card-text">@boardGame.MinGameTime</h6>
+                                    <h6 class="card-text">@boardGame.MaxGameTime</h6>
+                                    <h6 class="card-text">@boardGame.MinAgeOfPlayers</h6>
 
-                            </div>
+                                </div>
+                            </a>
 
                         </div>
 
                     </div>
-                </a>
+                
             }
         }
     </div>
