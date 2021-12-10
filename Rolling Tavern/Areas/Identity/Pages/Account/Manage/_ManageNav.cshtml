@@ -1,7 +1,9 @@
 ﻿@using Rolling_Tavern.Models
+@using Rolling_Tavern.Services
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var RatingImage = RatingManager.GetRatingImage(Model.UserInfo.Rating);
 }
 <style>
     section.profile {
@@ -25,24 +27,31 @@
     form button:hover {
         text-decoration:underline
     }
+
+    p {
+        font-family: 'Bluu Next Cyrillic';
+        color: black;
+    }
 </style>
 
 <section class="profile" style="background-color:white">
 
     <p>
-        <center>
+        <center style="position: relative">
             <img src="@Model.UserInfo.ProfilePicture" alt="" class="round" style="height: 100px; width: 100px">
+            <img src="@RatingImage" alt="" style="height: 35px; width: 35px; position: absolute; top: 65%; right: 30%">
         </center>
     </p>
     <p>
         <center>
-            @Model.UserInfo.FirstName<br/>
-            @Model.UserInfo.LastName<br/>
+            <p>@Model.UserInfo.FirstName
+            <br />
+            @Model.UserInfo.LastName
+            <br />
             (@Model.UserInfo.UserName)
+            </p>
         </center>
-        <center>
-            @Model.UserInfo.Rating
-        </center>
+       
     </p>
     <hr />
 

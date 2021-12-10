@@ -1,4 +1,5 @@
-﻿@model Rolling_Tavern.ViewModel.UserProfileViewModel
+﻿@using Rolling_Tavern.Services
+@model Rolling_Tavern.ViewModel.UserProfileViewModel
 @{
     ViewData["Title"] = "User";
 }
@@ -9,15 +10,24 @@
         return now.Year - birthDate.Year - 1 +
             ((now.Month > birthDate.Month || now.Month == birthDate.Month && now.Day >= birthDate.Day) ? 1 : 0);
     }
+    var RatingImage = RatingManager.GetRatingImage(Model.User.Rating);
 }
+
+<style>
+    p {
+        font-family: 'Bluu Next Cyrillic';
+        color: black;
+    }
+</style>
 
 <h2 style="text-align:center">Користувач: @Model.User.UserName</h2>
 <div class="row">
     <div class="col-md-3">
         <section class="profile" style="background-color:white;">
             <div class="form-group">
-                <center>
+                <center style="position: relative">
                     <img src="@Model.User.ProfilePicture" class="round" style="height: 100px; width: 100px" />
+                    <img src="@RatingImage" alt="" style="height: 35px; width: 35px; position: absolute; top: 65%; right: 30%">
                 </center>
             </div>
             <ul class="nav nav-pills flex-column">
