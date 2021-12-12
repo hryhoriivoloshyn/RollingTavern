@@ -193,6 +193,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: BoardGames/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -244,6 +245,7 @@ namespace Rolling_Tavern.Controllers
         }
 
         // GET: BoardGames/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
