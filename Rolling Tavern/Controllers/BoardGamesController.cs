@@ -94,6 +94,9 @@ namespace Rolling_Tavern.Controllers
 
             var boardGame = await _context.BoardGames
                 .FirstOrDefaultAsync(m => m.GameId == id);
+            List<GameImage> images = await _context.GameImages.Where(i => i.GameId == id).ToListAsync();
+            boardGame.Images = images;
+
             if (boardGame == null)
             {
                 return NotFound();
