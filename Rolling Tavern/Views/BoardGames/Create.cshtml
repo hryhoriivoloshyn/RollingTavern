@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="MinAgeOfPlayers" class="control-label"></label>
-                            <input asp-for="MinAgeOfPlayers" class="form-control" />
+                            <input asp-for="MinAgeOfPlayers" min="6" class="form-control" />
                             <span asp-validation-for="MinAgeOfPlayers" class="text-danger"></span>
                         </div>
                     </div>
@@ -46,27 +46,26 @@
 
                         <div class="form-group">
                             <label asp-for="MinAmountOfPlayers" class="control-label"></label>
-                            <input asp-for="MinAmountOfPlayers" id="minA" class="form-control"/>
-                            <span asp-validation-for="MinAmountOfPlayers" id="errorMinA" class="text-danger"></span>
+                            <input asp-for="MinAmountOfPlayers" min="1" id="minA" value="2" max="4" class="form-control"/>
+                            <span asp-validation-for="MinAmountOfPlayers" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="MaxAmountOfPlayers" class="control-label"></label>
-                            <input asp-for="MaxAmountOfPlayers" id="maxA" class="form-control"/>
-                            <span asp-validation-for="MaxAmountOfPlayers" id="errorMaxA" class="text-danger"></span>
+                            <input asp-for="MaxAmountOfPlayers" id="maxA" value="5" min="3" class="form-control"/>
+                            <span asp-validation-for="MaxAmountOfPlayers" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="MinGameTime" class="control-label">Мінімальний час гри</label>
-                            <input asp-for="MinGameTime" class="form-control" />
+                            <input asp-for="MinGameTime" id="minT" min="1" max="29" value="10" class="form-control" />
                             <span asp-validation-for="MinGameTime" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="MaxGameTime" class="control-label">Максимальний час гри</label>
-                            <input asp-for="MaxGameTime" class="form-control" />
+                            <input asp-for="MaxGameTime" id="maxT" min="11" value="30" class="form-control" />
                             <span asp-validation-for="MaxGameTime" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -130,27 +129,26 @@
     var maxInput = document.getElementById("maxA");
     minInput.onchange = function (e) {
         var min = document.getElementById("minA").value;
-        var max = document.getElementById("maxA").value;
-        console.log(min);
-        console.log(max);
-        if (Number.isInteger(parseInt(min)) && Number.isInteger(parseInt(max))) {
-            console.log("entered1")
-            if (parseInt(max) < parseInt(min)) {
-                console.log("entered2");
-                document.getElementById("errorMinA").innerHTML = "some text";
-            }
-        }
+        document.getElementById("maxA").min = (parseInt(min) + 1);
+        console.log("entered1");
     };
     maxInput.onchange = function (e) {
-        var min = document.getElementById("minA").value;
         var max = document.getElementById("maxA").value;
-        if (Number.isInteger(parseInt(min)) && Number.isInteger(parseInt(max))) {
-            console.log("entered3")
-            if (parseInt(max) < parseInt(min)) {
-                console.log("entered4");
-                $('#errorMaxA').text("Check False");
-            }
-        }
+        document.getElementById("minA").max = (parseInt(max) - 1);
+        console.log("entered2");
+    }
+
+    var minTInput = document.getElementById("minT");
+    var maxTInput = document.getElementById("maxT");
+    minTInput.onchange = function (e) {
+        var min = document.getElementById("minT").value;
+        document.getElementById("maxT").min = (parseInt(min) + 1);
+        console.log("entered1");
+    };
+    maxTInput.onchange = function (e) {
+        var max = document.getElementById("maxT").value;
+        document.getElementById("minT").max = (parseInt(max) - 1);
+        console.log("entered2");
     }
 
     function readURL(input, order) {
