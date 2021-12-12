@@ -84,12 +84,19 @@
                 </div>
             </div>
         </form>
-        <form asp-action="Delete">
-            <center>
-                <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
-                <input type="submit" value="Видалити" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" class="btn btn-primary" /> 
-            </center>
-        </form>
+        @if (User.IsInRole("admin"))
+        {
+            <form asp-action="Delete">
+                <center>
+                    <input type="hidden" asp-for="CurrentMeeting.MeetingId" />
+                    <input type="submit" value="Видалити" style="font-family: 'Bluu Next Cyrillic'; background: #B82406;font-size:20px;margin-top:30px" class="btn btn-primary" />
+                </center>
+            </form>
+        }
+        else
+        {
+            <label>Гарна спроба, але ви не адмін</label>
+        }
         <div>
             <center>
                 <div style="margin-top: 10px">
