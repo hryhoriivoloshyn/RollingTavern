@@ -84,7 +84,7 @@
                 </div>
             </div>
         </form>
-        @if (User.IsInRole("admin"))
+        @if (User.IsInRole("admin") || Model.CurrentMeeting.CreatorId==Model.CurrentUser.Id)
         {
             <form asp-action="Delete">
                 <center>
