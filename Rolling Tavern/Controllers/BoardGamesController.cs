@@ -200,12 +200,13 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
-
-            var boardGame = await _context.BoardGames.FindAsync(id);
+            BoardGame boardGame = await _context.BoardGames.FirstOrDefaultAsync(i => i.GameId == id);
             if (boardGame == null)
             {
                 return NotFound();
             }
+            List<GameImage> images = await _context.GameImages.Where(i=>i.GameId==id).ToListAsync();
+            boardGame.Images = images;
             return View(boardGame);
         }
 
@@ -214,7 +215,8 @@ namespace Rolling_Tavern.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameName,Genre,Description,MinAmountOfPlayers,MaxAmountOfPlayers,MinGameTime,MaxGameTime,MinAgeOfPlayers")] BoardGame boardGame)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameName,Genre,Description,MinAmountOfPlayers,MaxAmountOfPlayers,MinGameTime,MaxGameTime,MinAgeOfPlayers")] BoardGame boardGame,
+            IFormFile gamePicture1, IFormFile gamePicture2, IFormFile gamePicture3, IFormFile gamePicture4)
         {
             if (id != boardGame.GameId)
             {
@@ -223,22 +225,84 @@ namespace Rolling_Tavern.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                BoardGame game = await _context.BoardGames.FirstOrDefaultAsync(i => i.GameId == boardGame.GameId);
+                game.GameName = boardGame.GameName;
+                game.Genre = boardGame.Genre;
+                game.Description = boardGame.Description;
+                game.MinAmountOfPlayers = boardGame.MinAmountOfPlayers;
+                game.MaxAmountOfPlayers = boardGame.MaxAmountOfPlayers;
+                game.MinGameTime = boardGame.MinGameTime;
+                game.MaxGameTime = boardGame.MaxGameTime;
+                game.MinAgeOfPlayers = boardGame.MinAgeOfPlayers;
+                await _context.SaveChangesAsync();
+                BoardGame editedGame = await _context.BoardGames.FirstOrDefaultAsync(i => i.GameId == boardGame.GameId);
+                List<GameImage> images = await _context.GameImages.Where(i => i.GameId == boardGame.GameId).ToListAsync();
+                string path1 = null;
+                string path2 = null;
+                string path3 = null;
+                string path4 = null;
+                int count = images.Count();
+                if(count==1)
                 {
-                    _context.Update(boardGame);
-                    await _context.SaveChangesAsync();
+                    path1 = images[0].ImagePath;
                 }
-                catch (DbUpdateConcurrencyException)
+                if (count == 2)
                 {
-                    if (!BoardGameExists(boardGame.GameId))
+                    path1 = images[0].ImagePath;
+                    path2 = images[1].ImagePath;
+                }
+                if (count == 3)
+                {
+                    path1 = images[0].ImagePath;
+                    path2 = images[1].ImagePath;
+                    path3 = images[2].ImagePath;
+                }
+                if (count == 4)
+                {
+                    path1 = images[0].ImagePath;
+                    path2 = images[1].ImagePath;
+                    path3 = images[2].ImagePath;
+                    path4 = images[3].ImagePath;
+                }
+                if (gamePicture1 != null)
+                {
+                    path1 = await UploadPicture(gamePicture1, editedGame, "1");
+                }
+                if (gamePicture2 != null)
+                {
+                    path2 = await UploadPicture(gamePicture2, editedGame, "2");
+                }
+                if (gamePicture3 != null)
+                {
+                    path3 = await UploadPicture(gamePicture3, editedGame, "3");
+                }
+                if (gamePicture4 != null)
+                {
+                    path4 = await UploadPicture(gamePicture4, editedGame, "4");
+                }
+                foreach(var image in images)
+                {
+                    _context.GameImages.Remove(image);
+                }
+                await _context.SaveChangesAsync();
+                List<string> paths = new List<string>();
+                paths.Add(path1);
+                paths.Add(path2);
+                paths.Add(path3);
+                paths.Add(path4);
+                foreach (var path in paths)
+                {
+                    if (path != null)
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        GameImage newImage = new()
+                        {
+                            ImagePath = path,
+                            GameId = editedGame.GameId
+                        };
+                        _context.GameImages.Add(newImage);
                     }
                 }
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(boardGame);
