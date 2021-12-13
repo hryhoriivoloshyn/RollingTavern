@@ -642,7 +642,7 @@ namespace Rolling_Tavern.Controllers
 
                 if (user.Rating > 1000)
                 {
-                    user.Rating += 1000;
+                    user.Rating = 1000;
                 }
 
 
