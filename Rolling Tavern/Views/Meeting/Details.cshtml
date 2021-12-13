@@ -1,4 +1,5 @@
-﻿@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo
+﻿@using Rolling_Tavern.Services
+@model Rolling_Tavern.Controllers.MeetingController.CurrentInfo
 
 @{
     ViewData["Title"] = "Details";
@@ -250,29 +251,58 @@
                             <th>
                                 Репутація
                             </th>
+                            @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                            {
+                                <th>
+                                Оцінити користувача
+                                </th>
+                            }
                             <th>
                                 Вік
                             </th>
                         </tr>
                         @foreach (var item in Model.CurrentMeeting.Requests.Where(i => i.StateId == 2).ToList())
                         {
-                            <tr>
-                                <td>
-                                    @item.User.UserName
+                    <tr>
+                        <td>
+                            @item.User.UserName
+                        </td>
+                        <td>
+                            @item.User.FirstName
+                        </td>
+                        <td>
+                            @item.User.Email
+                        </td>
+                        <td>
+                            <center>
+                                <img src="@RatingManager.GetRatingImage(item.User.Rating)" alt="" style="height: 35px; width: 35px;">
+                            </center>
+                        </td>
+                            @if (Model.CurrentMeeting.CreatorId == Model.CurrentUser.Id)
+                            {
+                                <td >
+                                    @if (!item.Rated)
+                                    {
+                                        <div class="d-flex flex-row">
+                                            <a class="dropdown-item" asp-action="RateUser" asp-route-meetingId="@item.Meeting.MeetingId" asp-route-userId="@item.User.Id" asp-route-evaluation="true">&#128077</a>
+                                            <a class="dropdown-item" asp-action="RateUser" asp-route-meetingId="@item.Meeting.MeetingId" asp-route-userId="@item.User.Id" asp-route-evaluation="false">	&#128078</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <center>
+                                            Користувача оцінено
+                                        </center>
+                                    }
                                 </td>
-                                <td>
-                                    @item.User.FirstName
-                                </td>
-                                <td>
-                                    @item.User.Email
-                                </td>
-                                <td>
-                                    500
-                                </td>
-                                <td>
-                                    @GetAge((DateTime)item.User.DateOfBirth)
-                                </td>
-                            </tr>
+                            }
+                       
+                       
+
+                        <td>
+                            @GetAge((DateTime)item.User.DateOfBirth)
+                        </td>
+                    </tr>
                         }
                     </table>
                 </div>

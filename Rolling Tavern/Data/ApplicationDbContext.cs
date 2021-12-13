@@ -115,6 +115,9 @@ namespace Rolling_Tavern.Data
                     .HasForeignKey(d => d.StateId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Requests_States");
+                entity.Property(e => e.Rated)
+                    .IsRequired()
+                    .HasDefaultValue(false);
             });
 
             builder.Entity<State>(entity =>
