@@ -264,6 +264,10 @@ namespace Rolling_Tavern.Controllers
                     path3 = images[2].ImagePath;
                     path4 = images[3].ImagePath;
                 }
+                foreach (var image in images)
+                {
+                    _context.GameImages.Remove(image);
+                }
                 if (gamePicture1 != null)
                 {
                     path1 = await UploadPicture(gamePicture1, editedGame, "1");
@@ -279,11 +283,6 @@ namespace Rolling_Tavern.Controllers
                 if (gamePicture4 != null)
                 {
                     path4 = await UploadPicture(gamePicture4, editedGame, "4");
-                }
-                foreach(var image in images)
-                {
-                    if(image.ImagePath!="/GamePictures/defaultBoardGame.jpg")
-                        _context.GameImages.Remove(image);
                 }
                 await _context.SaveChangesAsync();
                 List<string> paths = new List<string>();
