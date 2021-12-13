@@ -316,14 +316,13 @@ namespace Rolling_Tavern.Controllers
             {
                 return NotFound();
             }
-
-            var boardGame = await _context.BoardGames
-                .FirstOrDefaultAsync(m => m.GameId == id);
+            BoardGame boardGame = await _context.BoardGames.FirstOrDefaultAsync(i => i.GameId == id);
             if (boardGame == null)
             {
                 return NotFound();
             }
-
+            List<GameImage> images = await _context.GameImages.Where(i => i.GameId == id).ToListAsync();
+            boardGame.Images = images;
             return View(boardGame);
         }
 

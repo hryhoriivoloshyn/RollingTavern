@@ -4,14 +4,14 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="page-content">
+<div class="page-content" onload="slide()">
     <center>
-        <h1>Деталі</h1>
+        <h1>Деталі гри:</h1>
         <h1>@Html.DisplayFor(model => model.GameName)</h1>
     </center>
     <hr />
     <div class="row justify-content-center">
-        <div class="col-4" style="margin-left:250px; width:fit-content;">
+        <div class="col-4" style="margin-left:200px; left: 100px; width:fit-content;">
             @if (Model.Images.Count() != 0)
             {
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel" style="max-height: 200px; max-width: 350px ">
@@ -52,10 +52,7 @@
             }
             <div class="form-row profile-row">
                 <div class="col-md-8">
-                    <div class="form-group" style="margin-top:10px">
-                        <h5>Жанр: <label> @Html.DisplayFor(model => model.Genre)</label></h5>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 15px;">
                         <h5>Опис гри: </h5>
                         <label>@Html.DisplayFor(model => model.Description)</label>
                     </div>
@@ -63,9 +60,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-4" style="margin-left:250px; width:fit-content;">
+        <div class="col-4" style="margin-left:150px; width:fit-content;">
             <div class="form-row profile-row">
                 <div class="col-md-8">
+                    <div class="form-group" style="margin-top:10px">
+                        <h5>Жанр: <label> @Html.DisplayFor(model => model.Genre)</label></h5>
+                    </div>
                     <div class="form-group">
                         <h5>
                             Кількість гравців:
@@ -74,7 +74,43 @@
                     </div>
                     <div class="form-group">
                         <h5>Час гри:</h5>
-                        <label>Від @Html.DisplayFor(model => model.MinGameTime) до @Html.DisplayFor(model => model.MaxGameTime) хвилин</label>
+                        @{
+                            double minTime = (double)Model.MinGameTime;
+                            double maxTime = (double)Model.MaxGameTime;
+                            string minTimeRes = "";
+                            string maxTimeRes = "";
+                            if (minTime >= 60)
+                            {
+                                minTimeRes += Math.Floor(minTime / 60).ToString();
+                                minTimeRes += "H ";
+                                if (minTime % 60 != 0)
+                                {
+                                    minTimeRes += (minTime % 60).ToString();
+                                    minTimeRes += "M ";
+                                }
+                            }
+                            else
+                            {
+                                minTimeRes += (minTime % 60).ToString();
+                                minTimeRes += "M ";
+                            }
+                            if (maxTime >= 60)
+                            {
+                                maxTimeRes += Math.Floor(maxTime / 60).ToString();
+                                maxTimeRes += "H ";
+                                if (maxTime % 60 != 0)
+                                {
+                                    maxTimeRes += (maxTime % 60).ToString();
+                                    maxTimeRes += "M ";
+                                }
+                            }
+                            else
+                            {
+                                maxTimeRes += (maxTime % 60).ToString();
+                                maxTimeRes += "M";
+                            }
+                        }
+                        <label>Від @minTimeRes до @maxTimeRes</label>
                     </div>
                     <div class="form-group">
                         <h5>Вікові обмеження: <label>@Html.DisplayFor(model => model.MinAgeOfPlayers)</label></h5>
@@ -131,3 +167,16 @@
     }
     
 </style>
+<script>
+    function slide() {
+        $('.carousel').carousel({
+            interval: 4500
+        });
+        $('.carousel').carousel('cycle', {
+            interval: 4500
+        });
+    }
+    $('.carousel').carousel({
+        interval: 4500
+    });
+</script>
