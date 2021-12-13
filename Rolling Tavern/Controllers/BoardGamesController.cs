@@ -44,7 +44,7 @@ namespace Rolling_Tavern.Controllers
 
         private async Task<string> UploadPicture(IFormFile gamePicture, BoardGame game, string order)
         {
-            const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
+            const string defaultPicturePath = "/GamePictures/defaultBoardGame.jpg";
             if (gamePicture == null)
             {
                 return defaultPicturePath;
@@ -282,7 +282,8 @@ namespace Rolling_Tavern.Controllers
                 }
                 foreach(var image in images)
                 {
-                    _context.GameImages.Remove(image);
+                    if(image.ImagePath!="/GamePictures/defaultBoardGame.jpg")
+                        _context.GameImages.Remove(image);
                 }
                 await _context.SaveChangesAsync();
                 List<string> paths = new List<string>();
