@@ -626,5 +626,46 @@ namespace Rolling_Tavern.Controllers
         {
             return _context.Meetings.Any(e => e.MeetingId == id);
         }
+
+
+        
+       
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> RateUser(int? meetingId, long? userId, bool? evaluation)
+        {
+           
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.UserId == userId && r.MeetingId == meetingId);
+            if (evaluation == true)
+            {
+                user.Rating += 100;
+
+                if (user.Rating > 1000)
+                {
+                    user.Rating += 1000;
+                }
+
+
+                request.Rated = true;
+
+                
+            } else
+            {
+                user.Rating -= 100;
+                if (user.Rating < 0)
+                {
+                    user.Rating = 0;
+                }
+
+                request.Rated = true;
+            }
+
+            _context.Update(request);
+            await _context.SaveChangesAsync();
+            return Redirect("/Meeting/Details/"+meetingId); 
+
+
+        }
+
     }
 }
