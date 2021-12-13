@@ -55,7 +55,9 @@ namespace Rolling_Tavern.Controllers
         }
         private async Task<string> UploadPicture(IFormFile profilePicture, Meeting meeting)
         {
-            const string defaultPicturePath = "/MeetingPictures/DefaultUser.png";
+            var game = await _context.BoardGames.Where(i => i.GameId == meeting.GameId).FirstOrDefaultAsync();
+            var picrutures = await _context.GameImages.Where(i => i.GameId == meeting.GameId).ToListAsync();
+            string defaultPicturePath = picrutures.First().ImagePath;
             if (profilePicture == null)
             {
                 return defaultPicturePath;
@@ -298,6 +300,7 @@ namespace Rolling_Tavern.Controllers
             }
             else
             {
+                ApplicationUser currentUser = await _userManager.GetUserAsync(User);
                 var temp = await _context.Meetings.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
                 BoardGame game = await _context.BoardGames.Where(i => i.GameId == temp.GameId).FirstOrDefaultAsync();
                 ApplicationUser creator = await _context.Users.Where(i => i.Id == temp.CreatorId).FirstOrDefaultAsync();
@@ -320,12 +323,10 @@ namespace Rolling_Tavern.Controllers
                 };
                 if (meeting == null)
                 {
-                    return null;
-                }
-                if (meeting == null)
-                {
                     return NotFound();
                 }
+                if (currentUser.Id != meeting.CreatorId)
+                    return NotFound();
                 ViewData["GameId"] = new SelectList(_context.BoardGames, "GameId", "GameName", meeting.GameId);
                 return View(meeting);
             }
@@ -428,6 +429,11 @@ namespace Rolling_Tavern.Controllers
             if (meeting == null)
             {
                 return NotFound();
+            }
+            if(!User.IsInRole("admin"))
+            {
+                if (meeting.CreatorId != currentUser.Id)
+                    return NotFound();
             }
             CurrentInfo info = new()
             {

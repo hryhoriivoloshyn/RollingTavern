@@ -1,0 +1,200 @@
+﻿@model Rolling_Tavern.Models.BoardGame
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<center>
+    <h1>Створити нову гру</h1>
+</center>
+<hr />
+
+<div class="page-content" onload="setAddress()">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="row justify-content-around">
+            <div class="col-4" style="margin-left:250px; width:fit-content;">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="GameName" class="control-label"></label>
+                            <input asp-for="GameName" class="form-control" />
+                            <span asp-validation-for="GameName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Genre" class="control-label"></label>
+                            <input asp-for="Genre" class="form-control" />
+                            <span asp-validation-for="Genre" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MinAgeOfPlayers" class="control-label"></label>
+                            <input asp-for="MinAgeOfPlayers" min="6" class="form-control" />
+                            <span asp-validation-for="MinAgeOfPlayers" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4" id="mod" style="right:100px">
+                <div class="form-row profile-row">
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+                            <label asp-for="MinAmountOfPlayers" class="control-label"></label>
+                            <input asp-for="MinAmountOfPlayers" min="1" id="minA" value="2" max="4" class="form-control"/>
+                            <span asp-validation-for="MinAmountOfPlayers" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxAmountOfPlayers" class="control-label"></label>
+                            <input asp-for="MaxAmountOfPlayers" id="maxA" value="5" min="3" class="form-control"/>
+                            <span asp-validation-for="MaxAmountOfPlayers" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MinGameTime" class="control-label">Мінімальний час гри</label>
+                            <input asp-for="MinGameTime" id="minT" min="1" max="29" value="10" class="form-control" />
+                            <span asp-validation-for="MinGameTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxGameTime" class="control-label">Максимальний час гри</label>
+                            <input asp-for="MaxGameTime" id="maxT" min="11" value="30" class="form-control" />
+                            <span asp-validation-for="MaxGameTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <center>
+            <div class="form-group">
+                <label>Оберіть до чотирьох фотографій</label>
+            </div>
+            <div style="width:fit-content; display:inline-block">
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture1" id="fileUpload1" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 1)" />
+                    <span id="photo1" class="text-danger"></span>
+                    <div style="text-align:center">
+                        <img id="game1" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture2" id="fileUpload2" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 2)" />
+                    <span id="photo2" class="text-danger"></span>
+                    <div style="text-align:center">
+                        <img id="game2" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
+                </div>
+            </div>
+            <div style="display: inline-block; width:fit-content; ">
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture3" id="fileUpload3" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 3)" />
+                    <span id="photo3" class="text-danger"></span>
+                    <div style="text-align: center;">
+                        <img id="game3" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Фото гри: </label>
+                    <input type="file" name="gamePicture4" id="fileUpload4" accept=".png,.jpg,.jpeg,.gif" onchange="readURL(this, 4)" />
+                    <span id="photo4" class="text-danger"></span>
+                    <div style="text-align: center;">
+                        <img id="game4" src="#" alt="Оберіть фото" style="margin-top:10px;" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Створити" class="nav-link text-white" style="text-align: center; font-family: Bluu Next Cyrillic; background: #B82406; border-radius: 5px;
+                            padding: 5px; padding-left: 10px; padding-right: 10px; width:10%;" />
+            </div>
+            <div>
+                <a asp-action="Index" class="text-muted">До списку ігор</a>
+            </div>
+        </center>
+    </form>
+
+</div>
+
+
+<script>
+    var minInput = document.getElementById("minA");
+    var maxInput = document.getElementById("maxA");
+    minInput.onchange = function (e) {
+        var min = document.getElementById("minA").value;
+        document.getElementById("maxA").min = (parseInt(min) + 1);
+        console.log("entered1");
+    };
+    maxInput.onchange = function (e) {
+        var max = document.getElementById("maxA").value;
+        document.getElementById("minA").max = (parseInt(max) - 1);
+        console.log("entered2");
+    }
+
+    var minTInput = document.getElementById("minT");
+    var maxTInput = document.getElementById("maxT");
+    minTInput.onchange = function (e) {
+        var min = document.getElementById("minT").value;
+        document.getElementById("maxT").min = (parseInt(min) + 1);
+        console.log("entered1");
+    };
+    maxTInput.onchange = function (e) {
+        var max = document.getElementById("maxT").value;
+        document.getElementById("minT").max = (parseInt(max) - 1);
+        console.log("entered2");
+    }
+
+    function readURL(input, order) {
+        if (input.files && input.files[0]) {
+            var num = order;
+            var reader = new FileReader();
+            var spanId = '#photo' + num;
+            var imgId = '#game' + num;
+            var inputId = 'fileUpload' + num;
+            reader.onload = function (e) {
+                if (checkExt(inputId)) {
+                    $(imgId)
+                        .attr('src', e.target.result)
+                        .width(300)
+                        .height(300);
+                    $(spanId).text('');
+                }
+                else {
+                    $(spanId).text('Ви обрали недоступне розширення для файлу. Доступні: .png, .jpg, .jpeg, .gif.');
+                    var file = document.getElementById(inputId);
+                    file.value = '';
+                    $(imgId).attr('src', '#');
+                }
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function checkExt(inputId) {
+        var file = document.getElementById(inputId);
+        var ext = file.value.match(/\.([^\.]+)$/)[1];
+        switch (ext) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+                return true;
+            default:
+                this.value = '';
+                return false;
+        }
+    }
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

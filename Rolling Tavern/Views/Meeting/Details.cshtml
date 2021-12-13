@@ -49,8 +49,16 @@
                         <img src="@Model.CurrentMeeting.PhotoLink" style="margin-top:10px; max-width: 450px; max-height: 350px;" />
                     </div>
                     <div class="form-group">
-                        <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
-                        <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        @if (Model.CurrentMeeting.GameId != 1)
+                        {
+                            <h5>Гра: <a href="/BoardGames/Details/@Model.CurrentMeeting.GameId"><u>@Model.CurrentMeeting.Game.GameName</u></a></h5>
+                            <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        }
+                        else
+                        {
+                            <h5>Гра: <u>@Model.CurrentMeeting.Game.GameName</u></h5>
+                            <label>Дата проведення зустрічі: @Model.CurrentMeeting.DateOfMeeting</label>
+                        }
                     </div>
                     <div class="form-group">
                         <h5>Опис зустрічі: </h5>
