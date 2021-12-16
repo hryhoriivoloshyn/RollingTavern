@@ -36,6 +36,9 @@
         <h1>Редагування настільної гри</h1>
     </center>
     <hr />
+    <center>
+        <h5>Час гри треба вводити в хвилинах.</h5>
+    </center>
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="GameId" />
@@ -149,7 +152,7 @@
 
 
 <style>
-    input, label, h1, h4 {
+    input, label, h1, h4, h5 {
         font-family: 'Bluu Next Cyrillic';
     }
     body {

@@ -8,6 +8,9 @@
     <h1>Створити нову гру</h1>
 </center>
 <hr />
+<center>
+    <h5>Час гри треба вводити в хвилинах.</h5>
+</center>
 
 <div class="page-content" onload="setAddress()">
     <form asp-action="Create" method="post" enctype="multipart/form-data">
@@ -123,7 +126,16 @@
 
 </div>
 
+<style>
+    input, label, h1, h4, h5 {
+        font-family: 'Bluu Next Cyrillic';
+    }
 
+    body {
+        margin: 0;
+        padding: 0;
+    }
+</style>
 <script>
     var minInput = document.getElementById("minA");
     var maxInput = document.getElementById("maxA");
