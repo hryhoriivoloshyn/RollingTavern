@@ -76,11 +76,22 @@ namespace Rolling_Tavern.Controllers
         // GET: BoardGames
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
+            ApplicationUser user = null;
+            if(User!=null)
+            {
+                user = await _userManager.GetUserAsync(User);
+            }
             var data = await GetBoardGamesAsync();
             CurrentState dataState = new CurrentState();
             dataState.Games = data;
-            dataState.Admin = await _userManager.IsInRoleAsync(user, "admin");
+            if(user!=null)
+            {
+                dataState.Admin = await _userManager.IsInRoleAsync(user, "admin");
+            }
+            else
+            {
+                dataState.Admin = false;
+            }
             return View(dataState);
         }
 
